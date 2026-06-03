@@ -1,0 +1,148 @@
+---
+---
+
+<section class="max-w-7xl mx-auto px-6 py-20" id="how-it-works">
+  <h2 class="text-3xl sm:text-4xl font-bold text-text text-center">How It Works</h2>
+  <p class="mt-4 text-text-muted text-center">Three simple steps to test any website</p>
+
+  <div class="relative mt-14" id="how-it-works-steps">
+    <div class="timeline-bar" id="timeline-bar"></div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <article class="step-card" data-delay="0">
+        <div class="step-number">1</div>
+        <h3 class="text-lg font-semibold text-text mt-4 mb-2">Paste URL</h3>
+        <p class="text-sm text-text-muted leading-relaxed">
+          Enter any website URL into the search bar. Supports both public and local development URLs.
+        </p>
+      </article>
+      <article class="step-card" data-delay="150">
+        <div class="step-number">2</div>
+        <h3 class="text-lg font-semibold text-text mt-4 mb-2">Choose Device</h3>
+        <p class="text-sm text-text-muted leading-relaxed">
+          Select from 100+ device presets — iPhones, Samsungs, Pixels, iPads, and desktops.
+        </p>
+      </article>
+      <article class="step-card" data-delay="300">
+        <div class="step-number">3</div>
+        <h3 class="text-lg font-semibold text-text mt-4 mb-2">Test Instantly</h3>
+        <p class="text-sm text-text-muted leading-relaxed">
+          See your site in real-time. Resize, rotate, zoom, and compare across devices instantly.
+        </p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .step-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    opacity: 0;
+  }
+
+  .is-visible .step-card {
+    animation: slideInUp 0.6s ease-out forwards;
+  }
+
+  .step-card:nth-child(1) { animation-delay: 0ms; }
+  .step-card:nth-child(2) { animation-delay: 150ms; }
+  .step-card:nth-child(3) { animation-delay: 300ms; }
+
+  .step-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(235, 29, 98, 0.15);
+  }
+
+  .step-number {
+    width: 48px;
+    height: 48px;
+    background: var(--color-accent);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 auto;
+  }
+
+  .timeline-bar {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  .is-visible .timeline-bar {
+    animation: drawLine 0.8s ease-out 0.3s forwards;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(24px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes drawLine {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step-card {
+      opacity: 1;
+      animation: none;
+    }
+    .is-visible .step-card {
+      animation: none;
+      opacity: 1;
+    }
+    .timeline-bar {
+      transform: scaleX(1);
+    }
+    .is-visible .timeline-bar {
+      animation: none;
+      transform: scaleX(1);
+    }
+  }
+</style>
+
+<script>
+  const section = document.getElementById('how-it-works');
+  const steps = document.getElementById('how-it-works-steps');
+
+  if (section && 'IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            section.classList.add('is-visible');
+            observer.disconnect();
+          }
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(section);
+  } else {
+    section?.classList.add('is-visible');
+  }
+</script>

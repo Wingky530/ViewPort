@@ -58,7 +58,8 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 | `pnpm dev` | Starts the local development server at `localhost:1234` |
 | `pnpm build` | Builds the production-ready server (SSR via `@astrojs/node`) |
 | `pnpm preview` | Previews the built server locally |
-| `pnpm astro check` | Runs the Astro CLI type-checker for `.astro` and `.tsx` files |
+| `pnpm astro check` | Runs the Astro CLI type-checker (use `tsc --noEmit` for faster checks) |
+| `pnpm tsc --noEmit` | Fast TypeScript check (recommended) |
 
 > **Note:** This project runs in **SSR mode** (`output: 'server'`). The proxy endpoint requires the server to be running.
 
@@ -80,6 +81,7 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 ├── src/
 │   ├── assets/                  # General assets (e.g., global images)
 │   ├── components/              # React components
+│   │   ├── landing/             # Landing page components (Hero, Features, etc.)
 │   │   ├── layout/              # Layout components (Navbar, Sidebar)
 │   │   ├── ui/                  # UI components (PreviewFrame, SearchModal, Controls, UrlInput)
 │   │   └── AppShell.tsx         # Main application orchestrator
