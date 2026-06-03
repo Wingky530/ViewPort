@@ -98,176 +98,182 @@ export default function AppShell() {
     document.documentElement.classList.toggle('dark', isDark);
   }, [isDark]);
 
-  // Global keyboard shortcut for search modal
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
-        event.preventDefault();
-        setShowSearch(prev => !prev);
-      }
-    };
-    document.addEventListener('keydown', handleKeyDown);
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-    };
-  }, []);
+  const addCustomDevice = useCallback((newDevice: Device) => {
+    setCustomDevices(prev => [...prev, newDevice]);
+    setDevice(newDevice);
+  }, [setCustomDevices, setDevice]);
 
-  const handleUrlChange = useCallback((newUrl: string) => {
-    setUrl(newUrl);
+  const deleteCustomDevice = useCallback((id: string) => {
+    setCustomDevices(prev => prev.filter(d => d.id !== id));
+  }, [setCustomDevices]);
+
+  const updateRecentUrls = useCallback((newUrl: string) => {
     setRecentUrls(prev => {
-      const next = [newUrl, ...prev.filter(u => u !== newUrl)];
-      return next.slice(0, 5);
+      const filtered = prev.filter(u => u !== newUrl);
+      return [newUrl, ...filtered].slice(0, 10); // Keep last 10
     });
-  }, [setUrl, setRecentUrls]);
+  }, [setRecentUrls]);
 
-  const showToast = useCallback((message: string) => {
-    setToast({ message, id: Date.now() });
-    setTimeout(() => setToast(null), 3000);
+  const handleDeviceChange = useCallback((newDevice: Device) => {
+    setDevice(newDevice);
+    if (isMobileCategory(newDevice.category)) {
+      setScrolling(true);
+    } else {
+      setScrolling(false);
+    }
+    setIsRotated(false);
+    setShowCustomForm(false);
+  }, [setDevice, setScrolling, setIsRotated]);
+
+  const handleMultiViewToggle = useCallback(() => {
+    setIsMultiView(prev => !prev);
+    // Reset rotations when switching to/from multi-view
+    setIsRotated(false);
+    setMultiRotated1(false);
+    setMultiRotated2(false);
+    setMultiRotated3(false);
   }, []);
 
-  const handleScreenshot = useCallback(() => {
-    showToast("Screenshot feature requires backend — coming soon!");
-  }, [showToast]);
+  const handleSearchSelect = useCallback((selectedUrl: string) => {
+    setUrl(selectedUrl);
+    updateRecentUrls(selectedUrl);
+    setShowSearch(false);
+  }, [setUrl, updateRecentUrls]);
+
+  const handleApplyCustomResolution = useCallback((width: number, height: number) => {
+    const newCustomDevice: Device = {
+      id: `custom-${width}x${height}-${Date.now()}`,
+      name: `Custom ${width}x${height}`,
+      category: 'custom',
+      width,
+      height,
+    };
+    addCustomDevice(newCustomDevice);
+    setShowCustomForm(false);
+    setShowSearch(false);
+  }, [addCustomDevice]);
+
+  const handleNavbarToggleSearch = useCallback(() => {
+    setShowSearch(prev => !prev);
+    setShowCustomForm(false);
+  }, []);
+
+  const handleNavbarToggleTools = useCallback(() => {
+    setShowTools(prev => !prev);
+  }, []);
+
+  const handleSidebarOpen = useCallback(() => {
+    setSidebarOpen(true);
+  }, []);
+
+  const handleSidebarClose = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
 
   const handleRotate = useCallback(() => {
     setIsRotated(prev => !prev);
   }, []);
 
-  const handleDeviceChange = useCallback((d: Device) => {
-    setDevice(d);
-    setIsRotated(false);
-    setShowCustomForm(d.category === 'custom');
-  }, [setDevice]);
+  const handleToast = useCallback((message: string) => {
+    setToast({ message, id: Date.now() });
+    setTimeout(() => setToast(null), 3000); // Hide after 3 seconds
+  }, []);
 
-  const handleCustomMode = useCallback(() => {
-    const last = customDevices[customDevices.length - 1];
-    if (last) {
-      setDevice(last);
-      setCustomWidth(String(last.width));
-      setCustomHeight(String(last.height));
-    } else {
-      const w = parseInt(customWidth) || 390;
-      const h = parseInt(customHeight) || 844;
-      setDevice({ id: 'custom-pending', name: `Custom ${w}\u00D7${h}`, width: w, height: h, category: 'custom' });
-    }
-    setShowCustomForm(true);
-    setIsRotated(false);
-  }, [customDevices, setDevice, customWidth, customHeight]);
+  const previewFrameProps = { url, zoom, scrolling, isRotated, onRotate: handleRotate };
 
-  const handleMultiViewChange = useCallback((v: boolean) => {
-    setIsMultiView(v);
-    if (v) {
-      setMultiDevice1(device);
-      if (isMobileCategory(device.category)) {
-        setMultiDevice2(pickDevice(TABLET_CATS));
-      } else {
-        setMultiDevice2(pickDevice(MOBILE_CATS));
-      }
-      setMultiDevice3(pickDevice(DESKTOP_CATS));
-      setMultiRotated1(false);
-      setMultiRotated2(false);
-      setMultiRotated3(false);
-    }
-  }, [device]);
-
-  const handleApplyCustom = useCallback((w: number, h: number) => {
-    if (isNaN(w) || isNaN(h) || w < 100 || h < 100) {
-      showToast('Please enter valid dimensions (min 100px)');
-      return;
-    }
-    const custom: Device = {
-      id: `custom-${w}-${h}`,
-      name: `Custom ${w}×${h}`,
-      width: w,
-      height: h,
-      category: 'custom',
-    };
-    setCustomDevices(prev => {
-      if (prev.some(d => d.width === w && d.height === h)) return prev;
-      return [...prev, custom];
-    });
-    setDevice(custom);
-    setIsRotated(false);
-    showToast(`Custom device ${w}×${h} applied`);
-  }, [setCustomDevices, setDevice, showToast]);
-
-  const handleApplyCustomFromSearch = useCallback((width: number, height: number) => {
-    setDevice({ id: `custom-${width}-${height}`, name: `Custom ${width}×${height}`, width, height, category: 'custom' });
-    setIsRotated(false);
-    showToast(`Custom device ${width}×${height} applied`);
-  }, [setDevice, showToast]);
-
-
-
-  const handleCustomResize = useCallback((w: number, h: number) => {
-    setDevice(prev => {
-      const updated: Device = { ...prev, width: w, height: h };
-      setCustomDevices(devices =>
-        devices.map(d => d.id === prev.id ? updated : d)
-      );
-      return updated;
-    });
-  }, [setDevice, setCustomDevices]);
-
-  const handleDeleteCustom = useCallback((id: string) => {
-    setCustomDevices(prev => prev.filter(d => d.id !== id));
-    if (device.id === id) {
-      setDevice(DEFAULT_DEVICE);
-    }
-  }, [setCustomDevices, setDevice, device.id]);
+  const multiViewFrames = isMultiView && (
+    <>
+      <PreviewFrame url={url} device={multiDevice1} zoom={zoom} scrolling={scrolling} isRotated={multiRotated1} onRotate={() => setMultiRotated1(prev => !prev)} onResize={() => {}} />
+      <PreviewFrame url={url} device={multiDevice2} zoom={zoom} scrolling={scrolling} isRotated={multiRotated2} onRotate={() => setMultiRotated2(prev => !prev)} onResize={() => {}} />
+      <PreviewFrame url={url} device={multiDevice3} zoom={zoom} scrolling={scrolling} isRotated={multiRotated3} onRotate={() => setMultiRotated3(prev => !prev)} onResize={() => {}} />
+    </>
+  );
 
   return (
-    <div className="h-screen flex flex-col">
-      <Navbar onToggleSidebar={() => setSidebarOpen(prev => !prev)} onToggleSearch={() => setShowSearch(prev => !prev)} onToggleTools={() => setShowTools(prev => !prev)} showSearch={showSearch} showTools={showTools} />
+    <div className="h-screen flex flex-col bg-bg text-text">
+      <Navbar
+        onToggleSidebar={handleSidebarOpen}
+        onToggleSearch={handleNavbarToggleSearch}
+        onToggleTools={handleNavbarToggleTools}
+        showSearch={showSearch}
+        showTools={showTools}
+      />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar selectedDevice={device} onSelectDevice={handleDeviceChange} onCustomMode={handleCustomMode} customDevices={customDevices} onDeleteCustom={handleDeleteCustom} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} isDark={isDark} onToggleDark={() => setIsDark(!isDark)} />
-        <main className="flex-1 flex flex-col overflow-hidden bg-preview-bg">
-          <div className="shrink-0">
-            {showTools && (
-              <Controls
-                zoom={zoom}
-                onZoomChange={setZoom}
-                onRotate={handleRotate}
-                isMultiView={isMultiView}
-                onMultiViewChange={handleMultiViewChange}
-                scrolling={scrolling}
-                onScrollingChange={setScrolling}
-                onScreenshot={handleScreenshot}
-                url={url}
-                device={device}
-              />
-            )}
-          </div>
-          
+        <Sidebar
+          selectedDevice={device}
+          onSelectDevice={handleDeviceChange}
+          onCustomMode={() => setShowCustomForm(true)}
+          customDevices={customDevices}
+          onDeleteCustom={deleteCustomDevice}
+          isOpen={sidebarOpen}
+          onClose={handleSidebarClose}
+          isDark={isDark}
+          onToggleDark={() => setIsDark(prev => !prev)}
+          zoom={zoom}
+          setZoom={setZoom}
+          scrolling={scrolling}
+          setScrolling={setScrolling}
+          isRotated={isRotated}
+          setIsRotated={setIsRotated}
+          isMultiView={isMultiView}
+          onToggleMultiView={handleMultiViewToggle}
+          onToast={handleToast}
+          // Multi-view specific props
+          multiDevice1={multiDevice1}
+          setMultiDevice1={setMultiDevice1}
+          multiRotated1={multiRotated1}
+          setMultiRotated1={setMultiRotated1}
+          multiDevice2={multiDevice2}
+          setMultiDevice2={setMultiDevice2}
+          multiRotated2={multiRotated2}
+          setMultiRotated2={setMultiRotated2}
+          multiDevice3={multiDevice3}
+          setMultiDevice3={setMultiDevice3}
+          multiRotated3={multiRotated3}
+          setMultiRotated3={setMultiRotated3}
+        />
+        <main className="flex-1 flex flex-col relative bg-surface overflow-hidden">
           {isMultiView ? (
-            <div className="flex-1 flex flex-row overflow-auto gap-2 p-2">
-              <PreviewFrame url={url} device={multiDevice1} zoom={zoom} scrolling={scrolling} onRotate={() => setMultiRotated1(prev => !prev)} isRotated={multiRotated1} />
-              <PreviewFrame url={url} device={multiDevice2} zoom={zoom} scrolling={scrolling} onRotate={() => setMultiRotated2(prev => !prev)} isRotated={multiRotated2} />
-              <PreviewFrame url={url} device={multiDevice3} zoom={zoom} scrolling={scrolling} onRotate={() => setMultiRotated3(prev => !prev)} isRotated={multiRotated3} />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6 flex-1 overflow-auto">
+              {multiViewFrames}
             </div>
           ) : (
-            <PreviewFrame url={url} device={device} zoom={zoom} scrolling={scrolling} isRotated={isRotated} onResize={device.category === 'custom' ? handleCustomResize : undefined} />
-          )}
-
-          <SearchModal
-            isOpen={showSearch}
-            onClose={() => setShowSearch(false)}
-            url={url || ''}
-            onChange={handleUrlChange}
-            recentUrls={Array.isArray(recentUrls) ? recentUrls : []}
-            devices={DEVICES}
-            onSelectRecent={handleUrlChange}
-            onSelectDevice={handleDeviceChange}
-            onApplyCustomResolution={handleApplyCustomFromSearch}
-          />
-
-          {toast && (
-            <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 px-6 py-3 bg-surface border border-border rounded-xl shadow-2xl text-sm text-text toast-enter" key={toast.id}>
-              {toast.message}
+            <div className="flex-1 flex items-center justify-center p-6 min-h-0">
+              <PreviewFrame
+                url={url}
+                device={device}
+                zoom={zoom}
+                scrolling={scrolling}
+                isRotated={isRotated}
+                onRotate={handleRotate}
+                onResize={() => {}} // Placeholder for now
+              />
             </div>
           )}
+          {showTools && <Controls url={url} device={device} zoom={zoom} onZoomChange={setZoom} onRotate={handleRotate} isMultiView={isMultiView} onMultiViewChange={(v) => setIsMultiView(v)} scrolling={scrolling} onScrollingChange={setScrolling} onScreenshot={() => handleToast('Screenshot not yet implemented')} />}
         </main>
       </div>
+
+        <SearchModal
+        isOpen={showSearch}
+        onClose={() => setShowSearch(false)}
+        url={url}
+        onChange={(newUrl) => {
+          setUrl(newUrl);
+          updateRecentUrls(newUrl);
+        }}
+        recentUrls={recentUrls}
+        devices={DEVICES}
+        onSelectRecent={handleSearchSelect}
+        onSelectDevice={handleDeviceChange}
+        onApplyCustomResolution={handleApplyCustomResolution}
+      />
+
+      {toast && (
+        <div key={toast.id} className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out">
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 }

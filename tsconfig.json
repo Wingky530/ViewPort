@@ -8,6 +8,12 @@
     "dist"
   ],
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@phosphor-icons/react": [
+        "./node_modules/.pnpm/phosphor-react@1.4.1_react@19.2.7/node_modules/phosphor-react"
+      ]
+    },
     "jsx": "react-jsx",
     "jsxImportSource": "react"
   }

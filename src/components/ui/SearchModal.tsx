@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, X, Smartphone, Tablet, Monitor, Tv, Settings2, Globe } from 'lucide-react';
+import { MagnifyingGlass, X, DeviceMobile, DeviceTablet, Monitor, Television, GearSix, GlobeHemisphereWest } from '@phosphor-icons/react';
 import { type Device, type DeviceCategory, DEVICE_CATEGORIES } from '../../content/devices';
 
 type Direction = 'top' | 'bottom' | 'left' | 'right';
@@ -53,11 +53,11 @@ const CATEGORY_BADGE_COLORS: Record<string, string> = {
 };
 
 const CATEGORY_ICONS: Record<string, React.ReactNode> = {
-  url:     <Globe size={16} />,
-  phone:   <Smartphone size={16} />,
-  tablet:  <Tablet size={16} />,
+  url:     <GlobeHemisphereWest size={16} />,
+  phone:   <DeviceMobile size={16} />,
+  tablet:  <DeviceTablet size={16} />,
   desktop: <Monitor size={16} />,
-  tv:      <Tv size={16} />,
+  tv:      <Television size={16} />,
 };
 
 interface SearchModalProps {
@@ -187,7 +187,7 @@ export default function SearchModal({
           />
         );
       } catch (e) {
-        return <Globe size={16} className="text-text-dim mr-2" />;
+        return <GlobeHemisphereWest size={16} className="text-text-dim mr-2" />;
       }
     }
     const iconId = CATEGORY_ICONS[r.data.category] ? r.data.category : 'desktop';
@@ -223,7 +223,7 @@ export default function SearchModal({
               <div className="p-0.5">
                 <form onSubmit={(e) => { e.preventDefault(); onChange(searchQuery); onClose(); }} className="flex flex-col p-3 gap-3">
                   <div className="flex items-center">
-                    <Search size={18} className="text-text-dim mr-2 shrink-0" />
+                    <MagnifyingGlass size={18} className="text-text-dim mr-2 shrink-0" />
                     <input
                       ref={inputRef}
                       type="text"
@@ -290,7 +290,7 @@ export default function SearchModal({
                     className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-accent bg-accent/5 border border-accent/20 rounded hover:bg-accent/10 transition-all active:scale-[0.98]"
                     onClick={handleApplyCustom}
                   >
-                    <Settings2 size={16} />
+                    <GearSix size={16} />
                     Apply custom resolution ({customResMatch[1]}×{customResMatch[2]})
                   </button>
                 </div>

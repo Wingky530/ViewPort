@@ -1,4 +1,4 @@
-import { Menu, Search, SlidersHorizontal } from 'lucide-react';
+import { List, MagnifyingGlass, SlidersHorizontal } from '@phosphor-icons/react';
 
 interface NavbarProps {
   onToggleSidebar: () => void;
@@ -17,7 +17,7 @@ export default function Navbar({ onToggleSidebar, onToggleSearch, onToggleTools,
           className="lg:hidden p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
           title="Toggle sidebar"
         >
-          <Menu size={20} />
+          <List size={20} />
         </button>
         <span className="text-xl font-bold text-accent">ViewPort</span>
         <div className="hidden sm:flex items-center gap-6">
@@ -31,7 +31,7 @@ export default function Navbar({ onToggleSidebar, onToggleSearch, onToggleTools,
           className={`p-2 rounded-lg transition-colors ${showSearch ? 'text-accent bg-accent/20' : 'text-text-muted hover:text-text hover:bg-surface-hover'}`}
           title="Toggle URL input"
         >
-          <Search size={18} />
+          <MagnifyingGlass size={18} />
         </button>
         <button
           onClick={onToggleTools}

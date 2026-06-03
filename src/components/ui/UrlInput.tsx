@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, ArrowRight, Clock } from 'lucide-react';
+import { MagnifyingGlass, ArrowRight, Clock } from '@phosphor-icons/react';
 
 interface UrlInputProps {
   url: string;
@@ -51,7 +51,7 @@ export default function UrlInput({ url, onChange, recentUrls = [], onSelectRecen
     <div ref={ref} className="relative">
       <form onSubmit={handleSubmit} className="flex items-center gap-2 px-4 py-3 border-b border-border bg-surface shrink-0">
         <div className="relative flex-1 flex items-center bg-bg border border-border rounded-lg focus-within:border-accent transition-colors">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim z-10" />
+          <MagnifyingGlass size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-dim z-10" />
           <span className="pl-9 text-sm text-text-dim/40 pointer-events-none select-none shrink-0">https://</span>
           <input
             type="text"

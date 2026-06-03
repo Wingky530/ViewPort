@@ -13,7 +13,7 @@ Viewport is a responsive web preview tool that allows developers to quickly view
 * [![Astro][Astro.dev]][Astro-url]
 * [![React][React.js]][React-url]
 * [![Tailwind CSS][TailwindCSS.com]][TailwindCSS-url]
-* [![Lucide React][LucideReact.com]][LucideReact-url]
+* [![Phosphor Icons][PhosphorIcons.com]][PhosphorIcons-url]
 * [![PNPM][PNPM.io]][PNPM-url]
 
 ## Getting Started
@@ -130,7 +130,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 [React-url]: https://react.dev/
 [TailwindCSS.com]: https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white
 [TailwindCSS-url]: https://tailwindcss.com/
-[LucideReact.com]: https://img.shields.io/badge/Lucide_React-000000?style=for-the-badge&logo=lucide&logoColor=white
-[LucideReact-url]: https://lucide.dev/
+[PhosphorIcons.com]: https://img.shields.io/badge/Phosphor_Icons-20232A?style=for-the-badge&logo=phosphor-icons&logoColor=white
+[PhosphorIcons-url]: https://phosphoricons.com/
 [PNPM.io]: https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white
 [PNPM-url]: https://pnpm.io/

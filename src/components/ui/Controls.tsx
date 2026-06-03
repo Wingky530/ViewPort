@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ZoomIn, ZoomOut, RotateCw, Columns, MousePointer2, Camera, Share2, Check } from 'lucide-react';
+import { MagnifyingGlassPlus, MagnifyingGlassMinus, ArrowClockwise, Columns, MouseSimple, Camera, ShareNetwork, Check } from '@phosphor-icons/react';
 import type { Device } from '../../content/devices';
 
 interface ControlsProps {
@@ -59,7 +59,7 @@ export default function Controls({
           className={`${btnBase} ${btnInactive} disabled:opacity-30 disabled:pointer-events-none`}
           title="Zoom out"
         >
-          <ZoomOut size={16} />
+          <MagnifyingGlassMinus size={16} />
         </button>
         <span className="text-xs font-mono w-10 text-center text-text-dim">{zoom}%</span>
         <button
@@ -68,7 +68,7 @@ export default function Controls({
           className={`${btnBase} ${btnInactive} disabled:opacity-30 disabled:pointer-events-none`}
           title="Zoom in"
         >
-          <ZoomIn size={16} />
+          <MagnifyingGlassPlus size={16} />
         </button>
 
         <div className="w-px h-5 bg-border mx-1" />
@@ -79,14 +79,14 @@ export default function Controls({
           className={`${btnBase} ${btnInactive}`}
           title="Rotate device"
         >
-          <RotateCw size={16} />
+          <ArrowClockwise size={16} />
         </button>
         <button
           onClick={() => onScrollingChange(!scrolling)}
           className={`${btnBase} ${scrolling ? btnActive : btnInactive}`}
           title={scrolling ? 'Disable scrolling' : 'Enable scrolling'}
         >
-          <MousePointer2 size={16} />
+          <MouseSimple size={16} />
         </button>
         <button
           onClick={onScreenshot}
@@ -111,7 +111,7 @@ export default function Controls({
           className="flex items-center gap-1.5 bg-accent hover:bg-accent-hover text-white rounded-lg px-3 py-1.5 text-xs transition-colors"
           title="Copy share link"
         >
-          {copied ? <Check size={14} /> : <Share2 size={14} />}
+          {copied ? <Check size={14} /> : <ShareNetwork size={14} />}
           {copied ? 'Copied!' : 'Copy Link'}
         </button>
       </div>

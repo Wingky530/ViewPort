@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AlertTriangle, RotateCw, Globe } from 'lucide-react';
+import { Warning, ArrowClockwise, GlobeHemisphereWest } from '@phosphor-icons/react';
 import type { Device } from '../../content/devices';
 
 interface PreviewFrameProps {
@@ -142,12 +142,12 @@ function IframeContent({ url, contentW, contentH, scrolling, isCustom, isDraggin
 
   const inner = !url || url.trim() === '' ? (
     <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-text-dim select-none w-full h-full bg-surface/50">
-      <Globe size={32} className="text-text-dim/40" />
+      <GlobeHemisphereWest size={32} className="text-text-dim/40" />
       <span className="text-sm font-medium text-text-muted">No URL provided</span>
     </div>
   ) : hasError ? (
     <div className="flex flex-col items-center justify-center text-center p-6 w-full h-full bg-frame-error-bg">
-      <AlertTriangle size={32} className="text-warning mb-3" />
+      <Warning size={32} className="text-warning mb-3" />
       <p className="text-sm text-text-muted mb-1">Preview unavailable</p>
       <p className="text-xs text-text-dim mb-4">This page blocks embedding via X-Frame-Options</p>
       <a
@@ -174,7 +174,7 @@ function IframeContent({ url, contentW, contentH, scrolling, isCustom, isDraggin
           />
         ) : (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-text-dim select-none w-full h-full bg-surface/50">
-            <Globe size={32} className="text-text-dim/40" />
+<GlobeHemisphereWest size={32} className="text-text-dim/40" />
             <span className="text-sm font-medium text-text-muted">No URL provided</span>
           </div>
         )}
@@ -485,7 +485,7 @@ export default function PreviewFrame({ url, device, zoom, scrolling, isRotated, 
     return (
       <div className="flex-1 flex flex-col items-center justify-center gap-4 p-6 text-text-dim select-none">
         <div className="w-16 h-16 rounded-2xl bg-surface border border-border flex items-center justify-center">
-          <Globe size={32} className="text-text-dim/60" />
+          <GlobeHemisphereWest size={32} className="text-text-dim/60" />
         </div>
         <div className="text-center">
           <p className="text-sm font-medium text-text-muted">Enter a URL to preview</p>
@@ -508,7 +508,7 @@ export default function PreviewFrame({ url, device, zoom, scrolling, isRotated, 
                 className="p-0.5 rounded-md text-text-dim hover:text-text hover:bg-surface-hover transition-colors"
                 title="Rotate device"
               >
-                <RotateCw size={12} />
+                <ArrowClockwise size={12} />
               </button>
             )}
           </div>
