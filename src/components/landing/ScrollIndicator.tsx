@@ -221,7 +221,7 @@ export function ScrollIndicator({ visible }: Props) {
         onClick={handleDoubleTap}
         style={{
           position: 'fixed',
-          right: 12,
+          right: 3,
           top: 24,
           height: 'calc(100vh - 48px)',
           width: 15,
@@ -314,7 +314,7 @@ export function ScrollIndicator({ visible }: Props) {
         onClick={showScrollbar}
         style={{
           position: 'fixed',
-          right: 12,
+          right: 3,
           top: 'calc(50vh - 14px)',
           transform: visible && manuallyHidden ? 'translateX(0)' : 'translateX(40px)',
           width: 28,

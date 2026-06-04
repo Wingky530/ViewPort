@@ -71,16 +71,7 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 
 ## Features
 
-### Responsive Preview
-- **Iframe Preview** — Displays any URL inside a sandboxed iframe
-- **Local URL Proxy** — Server-side proxy strips `X-Frame-Options` / `CSP` blocking headers from private URLs, enabling localhost preview
-- **Device Presets** — Mobile, tablet, desktop, and TV viewports with realistic bezels
-- **Custom Dimensions** — Resize the viewport freely with drag handles
-- **Zoom & Rotate** — Scale and flip between portrait/landscape
-- **URL History** — Recent URLs persisted in local storage
-- **Search Modal** — Quick URL entry and history browsing
-
-> More tools are planned and will be added to the toolkit over time.
+See [FEATURES.md](FEATURES.md) for a detailed list of current features and the development roadmap.
 
 ## Project Structure
 

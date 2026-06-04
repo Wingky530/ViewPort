@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/landing/Hero.astro";
-import Features from "../components/landing/Features.astro";
+import Features from "../components/landing/Features.tsx";
 import HowItWorks from "../components/landing/HowItWorks.astro";
 import Donate from "../components/landing/Donate.astro";
 import Footer from "../components/landing/Footer.astro";
@@ -9,7 +9,7 @@ import Footer from "../components/landing/Footer.astro";
 
 <BaseLayout>
   <Hero />
-  <Features />
+  <Features client:load />
   <HowItWorks />
   <Donate />
   <Footer />

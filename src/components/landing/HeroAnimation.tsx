@@ -46,8 +46,11 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
 
   const glowSequence = useMemo(() => {
     const sides = ['top', 'right', 'bottom', 'left'];
-    const start = Math.floor(Math.random() * 4);
-    return [...sides.slice(start), ...sides.slice(0, start)];
+    for (let i = sides.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [sides[i], sides[j]] = [sides[j], sides[i]];
+    }
+    return sides;
   }, []);
 
   const flickerKeyframes = useMemo(() => {
@@ -67,22 +70,29 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
     setActiveGlowSides(new Set([glowSequence[0]]));
     setFlickerSides(new Set([glowSequence[0]]));
 
-    [1, 2, 3].forEach(i => {
+    [0, 1, 2].forEach(i => {
+      const startMs = i * 350;
+      const endMs = startMs + 350;
       timers.push(setTimeout(() => {
-        setActiveGlowSides(prev => new Set(prev).add(glowSequence[i]));
-        setFlickerSides(prev => new Set(prev).add(glowSequence[i]));
-      }, i * 200));
-    });
-
-    glowSequence.forEach((side, i) => {
+        setActiveGlowSides(prev => new Set(prev).add(glowSequence[i + 1]));
+        setFlickerSides(prev => new Set(prev).add(glowSequence[i + 1]));
+      }, startMs + 350));
       timers.push(setTimeout(() => {
         setFlickerSides(prev => {
           const next = new Set(prev);
-          next.delete(side);
+          next.delete(glowSequence[i]);
           return next;
         });
-      }, i * 200 + 350));
+      }, endMs));
     });
+
+    timers.push(setTimeout(() => {
+      setFlickerSides(prev => {
+        const next = new Set(prev);
+        next.delete(glowSequence[3]);
+        return next;
+      });
+    }, 1400));
 
     timers.push(setTimeout(() => setBodyVisible(true), 1000));
     timers.push(setTimeout(() => setInitReady(true), 1200));
