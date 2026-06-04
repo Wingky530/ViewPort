@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import HeroAnimation from './HeroAnimation.tsx';
 import ScrambleText from './ScrambleText.tsx';
+import { ScrollIndicator } from './ScrollIndicator.tsx';
+import LandingNavModal from '../ui/LandingNavModal.tsx';
 
 type EntryPhase = 'init' | 'blink' | 'reveal';
 
@@ -62,9 +64,12 @@ export default function ScrollHeroSection() {
   const [titleAnimDone, setTitleAnimDone] = useState(false);
   const [showTitle, setShowTitle] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
+  const [contentRevealed, setContentRevealed] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
     lockedHeightRef.current = window.innerHeight;
 
     const handleScroll = () => {
@@ -89,12 +94,13 @@ export default function ScrollHeroSection() {
     const t_title        = setTimeout(() => { setShowTitle(true); setEntryPhase('reveal'); }, 2100);
     const t_title_done   = setTimeout(() => setTitleAnimDone(true), 3000);
     const t_cta          = setTimeout(() => { setShowCTA(true); setCtaEntered(true); }, 2600);
+    const t_content      = setTimeout(() => setContentRevealed(true), 2600);
     const t_cta_done     = setTimeout(() => setCtaAnimDone(true), 3600);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
       [t_blink, t_bg, t_horiz, t_vert, t_labels,
-       t_navbar, t_navbar_done, t_title, t_title_done, t_cta, t_cta_done].forEach(clearTimeout);
+       t_navbar, t_navbar_done, t_title, t_title_done, t_content, t_cta, t_cta_done].forEach(clearTimeout);
     };
   }, []);
 
@@ -104,6 +110,7 @@ export default function ScrollHeroSection() {
   
   const heroOverlayOpacity = Math.max(0, 1 - (scrollProgress - 0.8) / 0.2);
 
+  const scrollbarVisible = scrollProgress > 0.215;
   const isEndPhase = scrollProgress > 0.75;
   const innerBgColor = (!bgStarted || isEndPhase) ? '#252422' : '#EBEBDF';
   const innerBgTransition = bgStarted ? 'background-color 0.8s ease' : 'none';
@@ -143,6 +150,8 @@ export default function ScrollHeroSection() {
 
       <div
         ref={sectionRef}
+        id="hero"
+        data-section
         className="relative"
         style={{ height: '400svh', backgroundColor: '#252422', transition: innerBgTransition }}
       >
@@ -205,7 +214,7 @@ export default function ScrollHeroSection() {
             <div
               className="absolute top-0 left-0 right-0 pointer-events-auto"
               style={{
-                zIndex: 50,
+                zIndex: 30,
                 animation: !navEntryDone ? `navSlideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) both` : undefined,
                 ...navScrollStyle,
               }}
@@ -224,16 +233,22 @@ export default function ScrollHeroSection() {
                       <a href="/app" className="text-sm text-[#252422]/60 hover:text-[#252422] transition-colors">App</a>
                     </div>
                   </div>
-                  <button className="sm:hidden p-2 text-[#252422] hover:text-[#252422]/60 transition-colors" aria-label="Menu">
-                     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" strokeWidth="2" strokeLinecap="round">
-                       <line x1="2" y1="7" x2="20" y2="7" stroke="#252422" />
-                       <line x1="2" y1="15" x2="20" y2="15" stroke="#EB1D62" />
-                     </svg>
+                  <button
+                    onClick={() => setMobileMenuOpen(o => !o)}
+                    className="sm:hidden relative p-2 text-[#252422] transition-colors z-50"
+                    aria-label="Menu"
+                  >
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" strokeWidth="2" strokeLinecap="round" style={{ overflow: 'visible' }}>
+                      <line x1="3" y1="7" x2="19" y2="7" stroke="#252422" style={{ transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1)', transform: mobileMenuOpen ? 'translateY(4px) rotate(45deg)' : 'translateY(0) rotate(0)', transformOrigin: 'center' }} />
+                      <line x1="3" y1="15" x2="19" y2="15" stroke="#EB1D62" style={{ transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1)', transform: mobileMenuOpen ? 'translateY(-4px) rotate(-45deg)' : 'translateY(0) rotate(0)', transformOrigin: 'center' }} />
+                    </svg>
                   </button>
                 </div>
               </nav>
             </div>
           )}
+
+          <LandingNavModal isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
           {showTitle && (
             <div className="absolute top-[20vh] left-0 right-0 pointer-events-none z-10 px-6 sm:px-16 lg:px-24 xl:px-32">
@@ -245,7 +260,7 @@ export default function ScrollHeroSection() {
             className={`absolute top-[40vh] left-0 right-0 flex justify-center ${entryPhase === 'reveal' ? 'anim-mockup-in' : entryPhase === 'init' ? 'opacity-0' : 'anim-mockup-ready'}`}
             style={{ transition: 'opacity 0.4s' }}
           >
-            <HeroAnimation scrollProgress={scrollProgress} entryPhase={entryPhase} />
+            <HeroAnimation scrollProgress={scrollProgress} entryPhase={entryPhase} contentRevealed={contentRevealed} />
           </div>
 
           <div
@@ -261,7 +276,7 @@ export default function ScrollHeroSection() {
                 if (!target) return;
                 const start = window.scrollY;
                 const end = target.getBoundingClientRect().top + window.scrollY;
-                const duration = 3000;
+                const duration = 5000;
                 const startTime = performance.now();
                 const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
                 const step = (now: number) => {
@@ -297,6 +312,8 @@ export default function ScrollHeroSection() {
             </div>
           </div>
         </div>
+
+        <ScrollIndicator visible={scrollbarVisible} />
       </div>
     </>
   );

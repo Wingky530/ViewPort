@@ -1,8 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const W_MIN = 200;
 const W_MAX = 520;
 const HO_MAX = 100;
+
+const SIDE_STYLE: Record<string, React.CSSProperties> = {
+  top:    { top: 0, left: 0, right: 0, height: 2 },
+  right:  { top: 0, right: 0, bottom: 0, width: 2 },
+  bottom: { bottom: 0, left: 0, right: 0, height: 2 },
+  left:   { top: 0, left: 0, bottom: 0, width: 2 },
+};
 
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -27,13 +34,64 @@ function HandGrabIcon() {
 interface Props {
   scrollProgress: number;
   entryPhase: 'init' | 'blink' | 'reveal';
+  contentRevealed: boolean;
 }
 
-export default function HeroAnimation({ scrollProgress, entryPhase }: Props) {
+export default function HeroAnimation({ scrollProgress, entryPhase, contentRevealed }: Props) {
   const [typedText, setTypedText] = useState('');
+  const [activeGlowSides, setActiveGlowSides] = useState<Set<string>>(new Set());
+  const [flickerSides, setFlickerSides] = useState<Set<string>>(new Set());
+  const [bodyVisible, setBodyVisible] = useState(false);
+  const [initReady, setInitReady] = useState(false);
+
+  const glowSequence = useMemo(() => {
+    const sides = ['top', 'right', 'bottom', 'left'];
+    const start = Math.floor(Math.random() * 4);
+    return [...sides.slice(start), ...sides.slice(0, start)];
+  }, []);
+
+  const flickerKeyframes = useMemo(() => {
+    return Array.from({ length: 4 }, (_, i) => {
+      const steps: string[] = [];
+      for (let p = 5; p <= 95; p += 9) {
+        const o = Math.random() > 0.4 ? 0.15 + Math.random() * 0.8 : 0.04;
+        steps.push(`${p}% { opacity: ${o.toFixed(2)}; }`);
+      }
+      return `@keyframes flicker-${i} { 0% { opacity: 1; } ${steps.join(' ')} 100% { opacity: 1; } }`;
+    });
+  }, []);
 
   useEffect(() => {
-    if (entryPhase === 'blink') {
+    const timers: ReturnType<typeof setTimeout>[] = [];
+
+    setActiveGlowSides(new Set([glowSequence[0]]));
+    setFlickerSides(new Set([glowSequence[0]]));
+
+    [1, 2, 3].forEach(i => {
+      timers.push(setTimeout(() => {
+        setActiveGlowSides(prev => new Set(prev).add(glowSequence[i]));
+        setFlickerSides(prev => new Set(prev).add(glowSequence[i]));
+      }, i * 200));
+    });
+
+    glowSequence.forEach((side, i) => {
+      timers.push(setTimeout(() => {
+        setFlickerSides(prev => {
+          const next = new Set(prev);
+          next.delete(side);
+          return next;
+        });
+      }, i * 200 + 350));
+    });
+
+    timers.push(setTimeout(() => setBodyVisible(true), 1000));
+    timers.push(setTimeout(() => setInitReady(true), 1200));
+
+    return () => timers.forEach(clearTimeout);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (entryPhase === 'blink' && initReady) {
       const word = 'viewport';
       let i = 0;
       const interval = setInterval(() => {
@@ -45,7 +103,7 @@ export default function HeroAnimation({ scrollProgress, entryPhase }: Props) {
       }, 100);
       return () => clearInterval(interval);
     }
-  }, [entryPhase]);
+  }, [entryPhase, initReady]);
 
   function phaseP(p: number, start: number, end: number): number {
     return Math.max(0, Math.min(1, (p - start) / (end - start)));
@@ -105,69 +163,105 @@ export default function HeroAnimation({ scrollProgress, entryPhase }: Props) {
 
   const isNarrow = width < 260;
   const showHand = entryPhase === 'reveal';
-  const blinkClass = entryPhase === 'blink' ? 'anim-neon' : '';
-  const urlText = entryPhase === 'init' ? '' : (typedText || 'viewport');
+  const urlText = initReady && entryPhase !== 'init' ? typedText : '';
+
+  const BORDER_RADIUS = `${zoomRadius}px`;
 
   return (
     <div className="w-full relative overflow-visible" style={{ height: 180 }}>
-        <div
-          className={`absolute top-0 left-1/2 -translate-x-1/2 bg-[#252422] border border-[#EB1D62] rounded-[3px] overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.18),0_2px_8px_rgba(0,0,0,0.12)] ${blinkClass}`}
+      <style>{flickerKeyframes.join('\n')}</style>
+
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2"
         style={{
           width: `${width}px`,
           maxWidth: `min(${W_MAX}px, calc(100vw - 48px))`,
           transform: `scale(${zoomScale})`,
           transformOrigin: 'center center',
-          borderRadius: `${zoomRadius}px`,
-          transition: 'none',
         }}
       >
-        <div className={`h-9 bg-[#252422] border-b border-white/10 flex items-center px-4 gap-2 ${!isNarrow ? '' : 'justify-center'}`}>
-          {!isNarrow && (
-            <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-danger/60" />
-              <div className="w-3 h-3 rounded-full bg-warning/60" />
-              <div className="w-3 h-3 rounded-full bg-success/60" />
-            </div>
-          )}
-          <div className="h-5 bg-white/8 rounded flex items-center px-2" style={{ width: isNarrow ? '100%' : 'flex-1' }}>
-            <span className="text-[10px] text-white/40 font-mono truncate w-full text-center">
-              {urlText}{entryPhase === 'blink' && typedText.length < 'viewport'.length ? (
-                <span className="animate-pulse">|</span>
-              ) : ''}
-            </span>
-          </div>
-        </div>
-
-        <div className={`p-3 ${entryPhase === 'reveal' ? 'anim-content' : 'opacity-0'}`} style={{ minHeight: isNarrow ? 100 : 120 }}>
-          <div className="flex gap-4 mb-6">
-            <div className="h-3 w-16 rounded bg-white/8" />
-            <div className="h-3 w-14 rounded bg-white/8" />
-            <div className="h-3 w-12 rounded bg-white/8" />
-          </div>
-
-          <div className="flex gap-4" style={{ flexDirection: width < 260 ? 'column' : 'row' }}>
-            {width >= 260 && (
-              <div className="space-y-3 w-1/4 min-w-[60px]">
-                <div className="h-24 rounded-lg bg-white/8" />
-                <div className="h-3 w-3/4 rounded bg-white/8" />
-                <div className="h-3 w-1/2 rounded bg-white/8" />
+        <div
+          className="bg-[#252422] rounded-[3px] overflow-hidden shadow-lg"
+          style={{
+            borderRadius: BORDER_RADIUS,
+            opacity: bodyVisible ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+        >
+          <div className={`h-9 bg-[#252422] border-b border-white/10 flex items-center px-4 gap-2 ${!isNarrow ? '' : 'justify-center'}`}>
+            {!isNarrow && (
+              <div className="flex gap-1.5">
+                <div className="w-3 h-3 rounded-full bg-danger/60" />
+                <div className="w-3 h-3 rounded-full bg-warning/60" />
+                <div className="w-3 h-3 rounded-full bg-success/60" />
               </div>
             )}
-            <div className="flex-1 space-y-4">
-              <div className="h-5 w-3/5 rounded bg-white/8" />
-              <div className="h-3 w-full rounded bg-white/8" />
-              <div className="h-3 w-11/12 rounded bg-white/8" />
-              <div className="h-3 w-4/5 rounded bg-white/8" />
-              <div className={`grid gap-3 mt-6 ${isNarrow ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                                <div className="h-20 rounded-lg bg-white/8" />
-                                <div className="h-20 rounded-lg bg-white/8" />
-                {!isNarrow && (
-                                  <div className="h-20 rounded-lg bg-white/8" />
-                )}
+            <div className="h-5 bg-white/8 rounded flex items-center px-2" style={{ width: isNarrow ? '100%' : 'flex-1' }}>
+              <span className="text-[10px] text-white/40 font-mono truncate w-full text-center">
+                {urlText}{entryPhase === 'blink' && initReady && typedText.length < 'viewport'.length ? (
+                  <span className="animate-pulse">|</span>
+                ) : ''}
+              </span>
+            </div>
+          </div>
+
+          <div className={`p-3 ${contentRevealed ? 'anim-content' : 'opacity-0'}`} style={{ minHeight: isNarrow ? 100 : 120 }}>
+            <div className="flex gap-4 mb-6">
+              <div className="h-3 w-16 rounded bg-white/8" />
+              <div className="h-3 w-14 rounded bg-white/8" />
+              <div className="h-3 w-12 rounded bg-white/8" />
+            </div>
+
+            <div className="flex gap-4" style={{ flexDirection: width < 260 ? 'column' : 'row' }}>
+              {width >= 260 && (
+                <div className="space-y-3 w-1/4 min-w-[60px]">
+                  <div className="h-24 rounded-lg bg-white/8" />
+                  <div className="h-3 w-3/4 rounded bg-white/8" />
+                  <div className="h-3 w-1/2 rounded bg-white/8" />
+                </div>
+              )}
+              <div className="flex-1 space-y-4">
+                <div className="h-5 w-3/5 rounded bg-white/8" />
+                <div className="h-3 w-full rounded bg-white/8" />
+                <div className="h-3 w-11/12 rounded bg-white/8" />
+                <div className="h-3 w-4/5 rounded bg-white/8" />
+                <div className={`grid gap-3 mt-6 ${isNarrow ? 'grid-cols-2' : 'grid-cols-3'}`}>
+                  <div className="h-20 rounded-lg bg-white/8" />
+                  <div className="h-20 rounded-lg bg-white/8" />
+                  {!isNarrow && (
+                    <div className="h-20 rounded-lg bg-white/8" />
+                  )}
+                </div>
               </div>
             </div>
           </div>
         </div>
+
+        {glowSequence.map((side, idx) => {
+          const sideRadius = {
+            top:    `${BORDER_RADIUS} ${BORDER_RADIUS} 0 0`,
+            right:  `0 ${BORDER_RADIUS} ${BORDER_RADIUS} 0`,
+            bottom: `0 0 ${BORDER_RADIUS} ${BORDER_RADIUS}`,
+            left:   `${BORDER_RADIUS} 0 0 ${BORDER_RADIUS}`,
+          }[side];
+          return (
+            <div
+              key={side}
+              style={{
+                position: 'absolute',
+                ...SIDE_STYLE[side],
+                background: '#EB1D62',
+                opacity: activeGlowSides.has(side) && !flickerSides.has(side) ? 1 : 0,
+                transition: 'opacity 0.12s ease',
+                pointerEvents: 'none',
+                borderRadius: sideRadius,
+                animation: flickerSides.has(side) ? `flicker-${idx} 0.35s step-end 1 forwards` : undefined,
+                filter: activeGlowSides.has(side) ? 'drop-shadow(0 0 3px rgba(235,29,98,0.3))' : 'none',
+                zIndex: 1,
+              }}
+            />
+          );
+        })}
       </div>
 
       <div
