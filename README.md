@@ -143,3 +143,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 [PhosphorIcons-url]: https://phosphoricons.com/
 [PNPM.io]: https://img.shields.io/badge/pnpm-F69220?style=for-the-badge&logo=pnpm&logoColor=white
 [PNPM-url]: https://pnpm.io/
+[FramerMotion.com]: https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white
+[FramerMotion-url]: https://www.framer.com/motion/
+[Animejs.com]: https://img.shields.io/badge/Anime.js-FFB300?style=for-the-badge&logo=animejs&logoColor=white
+[Animejs-url]: https://animejs.com/
