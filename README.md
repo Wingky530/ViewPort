@@ -1,18 +1,24 @@
 <a id="readme-top"></a>
 
-# Viewport: Responsive Web Preview Tool
+# ViewPort
 
-A modern web application built with Astro and React for providing an interactive iframe-based preview of URLs, designed for responsive development and testing.
+![ViewPort Logo](/img/logo.png)
+
+**An open-source and free web toolkit.**
+
+A modern web application built with Astro and React — designed as a growing suite of tools for web developers.
 
 ## About The Project
 
-Viewport is a responsive web preview tool that allows developers to quickly view and interact with web pages within an iframe. It supports URL input, search functionality, device presets (mobile, tablet, desktop, TV), zoom, rotation, and maintains a history of recent URLs.
+ViewPort is an open-source web toolkit that bundles multiple developer utilities into one place. The first available tool is a **Responsive Preview** — an interactive iframe-based preview that lets you test any URL across device sizes, with support for device presets (mobile, tablet, desktop, TV), zoom, rotation, custom dimensions, and a built-in proxy for local URLs. More tools are coming.
 
 ### Built With
 
 * [![Astro][Astro.dev]][Astro-url]
 * [![React][React.js]][React-url]
 * [![Tailwind CSS][TailwindCSS.com]][TailwindCSS-url]
+* [![Framer Motion][FramerMotion.com]][FramerMotion-url]
+* [![Anime.js][Animejs.com]][Animejs-url]
 * [![Phosphor Icons][PhosphorIcons.com]][PhosphorIcons-url]
 * [![PNPM][PNPM.io]][PNPM-url]
 
@@ -20,7 +26,7 @@ Viewport is a responsive web preview tool that allows developers to quickly view
 
 ### Prerequisites
 
-Ensure you have pnpm installed globally.
+Ensure you have Node.js ≥22.12.0 and pnpm installed globally.
 
 ```sh
 npm install -g pnpm
@@ -30,7 +36,7 @@ npm install -g pnpm
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/your_username/viewport.git
+   git clone https://github.com/Wingky530/ViewPort.git
    ```
 2. Install PNPM packages
    ```sh
@@ -58,13 +64,14 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 | `pnpm dev` | Starts the local development server at `localhost:1234` |
 | `pnpm build` | Builds the production-ready server (SSR via `@astrojs/node`) |
 | `pnpm preview` | Previews the built server locally |
-| `pnpm astro check` | Runs the Astro CLI type-checker (use `tsc --noEmit` for faster checks) |
+| `pnpm astro check` | Astro type-checker — **slow, may hang; use `pnpm tsc --noEmit` instead** |
 | `pnpm tsc --noEmit` | Fast TypeScript check (recommended) |
 
 > **Note:** This project runs in **SSR mode** (`output: 'server'`). The proxy endpoint requires the server to be running.
 
 ## Features
 
+### Responsive Preview
 - **Iframe Preview** — Displays any URL inside a sandboxed iframe
 - **Local URL Proxy** — Server-side proxy strips `X-Frame-Options` / `CSP` blocking headers from private URLs, enabling localhost preview
 - **Device Presets** — Mobile, tablet, desktop, and TV viewports with realistic bezels
@@ -72,6 +79,8 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 - **Zoom & Rotate** — Scale and flip between portrait/landscape
 - **URL History** — Recent URLs persisted in local storage
 - **Search Modal** — Quick URL entry and history browsing
+
+> More tools are planned and will be added to the toolkit over time.
 
 ## Project Structure
 
@@ -111,11 +120,11 @@ Viewport includes a built-in server-side proxy (`/api/proxy`) that enables previ
 
 ## Roadmap
 
-- [ ] **UI Polish** — Refine layout, animations, responsive behavior, and dark mode consistency. Clean up unused components (e.g., `UrlInput.tsx`).
-- [ ] **Multi-view Revision** — Reduce from 3 to 2 views, add responsive layout, fix sidebar sync, persist state, and resolve UX dead-end when tools are hidden.
-- [ ] **Multi-language Support** — Add i18n via `react-intl` or similar.
-- [ ] **Logo & Branding** — Custom logo, favicon, and meta tags.
-- [ ] **Keyboard Shortcuts** — Quick navigation (e.g., `Cmd+K` for search, `Cmd+1-4` for device presets).
+- [ ] **UI Polish** — Refine layout, animations, responsive behavior, and dark mode consistency
+- [ ] **Multi-view** — Reduce to 2 views, responsive layout, sidebar sync, and persistent state
+- [ ] **Keyboard Shortcuts** — Quick navigation (`Cmd+K` for search, `Cmd+1–4` for device presets)
+- [ ] **Multi-language Support** — i18n support
+- [ ] **More Tools** — Additional web developer utilities coming to the toolkit
 
 ## License
 

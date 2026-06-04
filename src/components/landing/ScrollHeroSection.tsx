@@ -5,33 +5,29 @@ import ScrambleText from './ScrambleText.tsx';
 type EntryPhase = 'init' | 'blink' | 'reveal';
 
 interface HeroOverlayProps {
-  scrollProgress?: number;
+  slideOutP: number;
   entryPhase: EntryPhase;
   dotActive?: boolean;
 }
 
-function HeroOverlay({ scrollProgress = 0, entryPhase, dotActive = false }: HeroOverlayProps) {
-  const FADE_START = 0.8;
-  const FADE_RANGE = 0.35;
-  const topP = scrollProgress < FADE_START
-    ? 0
-    : Math.min(1, (scrollProgress - FADE_START) / FADE_RANGE);
+function HeroOverlay({ slideOutP, entryPhase, dotActive = false }: HeroOverlayProps) {
   const isRevealed = entryPhase === 'reveal';
+  const dotActiveClass = dotActive ? 'bg-[var(--color-accent)]' : 'bg-[var(--color-bg)]';
 
   return (
     <div
       className="max-w-2xl"
       style={{
-        transform: isRevealed ? `translateY(${-topP * 60}px)` : undefined,
-        opacity: isRevealed ? 1 - topP : 0,
+        transform: isRevealed ? `translateY(${-slideOutP * 250}px)` : undefined,
+        opacity: isRevealed ? 1 - slideOutP : 0,
       }}
     >
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold italic text-[var(--color-accent)] leading-[1.1] tracking-tight">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic text-[var(--color-bg)] leading-[1.1] tracking-tight">
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '0ms' }}>All-in-one</span>{' '}
         <br />
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '150ms' }}>web</span>{' '}
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '300ms' }}>
-          toolkit<span id="title-dot" className={`inline-block w-[0.15em] h-[0.15em] ml-1 mt-[1.7px] transition-colors duration-500 ${dotActive ? 'bg-[var(--color-accent)]' : 'bg-accent'}`} />
+          toolkit<span id="title-dot" className={'inline-block w-[0.20em] h-[0.20em] ml-0.75 mt-[1.7px] transition-colors duration-500 ' + dotActiveClass} />
         </span>
       </h1>
       <p className={`mt-2.5 text-sm sm:text-base font-semibold italic text-[var(--color-text-muted)] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
@@ -52,7 +48,6 @@ export default function ScrollHeroSection() {
   const [ctaAnimDone, setCtaAnimDone] = useState(false);
   const [bgStarted, setBgStarted] = useState(false);
 
-  // Grid: two independent layers, each with random slide-in direction
   const [showHorizGrid, setShowHorizGrid] = useState(false);
   const [showVertGrid, setShowVertGrid] = useState(false);
   const [showGridLabels, setShowGridLabels] = useState(false);
@@ -61,7 +56,6 @@ export default function ScrollHeroSection() {
     y: Math.random() > 0.5 ? 'top' : 'bottom',
   }));
 
-  // Navbar: entry phase vs scroll phase
   const [showNavbar, setShowNavbar] = useState(false);
   const [navEntryDone, setNavEntryDone] = useState(false);
 
@@ -85,18 +79,17 @@ export default function ScrollHeroSection() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Sequence: Blink → BG → Grid (horiz + vert simultaneously) → Labels → Navbar → Title → CTA
-    const t_blink        = setTimeout(() => setEntryPhase('blink'), 200);
-    const t_bg           = setTimeout(() => setBgStarted(true), 1000);
-    const t_horiz        = setTimeout(() => setShowHorizGrid(true), 1200);
-    const t_vert         = setTimeout(() => setShowVertGrid(true), 1500);
-    const t_labels       = setTimeout(() => setShowGridLabels(true), 1900);
-    const t_navbar       = setTimeout(() => setShowNavbar(true), 2400);
-    const t_navbar_done  = setTimeout(() => setNavEntryDone(true), 3300); // 2400 + 800ms anim + 100ms buffer
-    const t_title        = setTimeout(() => { setShowTitle(true); setEntryPhase('reveal'); }, 3000);
-    const t_title_done   = setTimeout(() => setTitleAnimDone(true), 3900); // 3000 + 300 (last delay) + ~600 (anim)
-    const t_cta          = setTimeout(() => { setShowCTA(true); setCtaEntered(true); }, 3600);
-    const t_cta_done     = setTimeout(() => setCtaAnimDone(true), 4600);
+    const t_blink        = setTimeout(() => setEntryPhase('blink'), 100);
+    const t_bg           = setTimeout(() => setBgStarted(true), 600);
+    const t_horiz        = setTimeout(() => setShowHorizGrid(true), 900);
+    const t_vert         = setTimeout(() => setShowVertGrid(true), 1200);
+    const t_labels       = setTimeout(() => setShowGridLabels(true), 900);
+    const t_navbar       = setTimeout(() => setShowNavbar(true), 1600);
+    const t_navbar_done  = setTimeout(() => setNavEntryDone(true), 2500);
+    const t_title        = setTimeout(() => { setShowTitle(true); setEntryPhase('reveal'); }, 2100);
+    const t_title_done   = setTimeout(() => setTitleAnimDone(true), 3000);
+    const t_cta          = setTimeout(() => { setShowCTA(true); setCtaEntered(true); }, 2600);
+    const t_cta_done     = setTimeout(() => setCtaAnimDone(true), 3600);
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -105,14 +98,16 @@ export default function ScrollHeroSection() {
     };
   }, []);
 
-  const FADE_START = 0.8;
-  const FADE_RANGE = 0.35;
-  const fadeP = scrollProgress < FADE_START ? 0 : Math.min(1, (scrollProgress - FADE_START) / FADE_RANGE);
+  const SLIDE_OUT_START = 0.02;
+  const SLIDE_OUT_END = 0.18;
+  const slideOutP = Math.max(0, Math.min(1, (scrollProgress - SLIDE_OUT_START) / (SLIDE_OUT_END - SLIDE_OUT_START)));
+  
   const heroOverlayOpacity = Math.max(0, 1 - (scrollProgress - 0.8) / 0.2);
-  const innerBgColor = bgStarted ? '#EBEBDF' : '#252422';
+
+  const isEndPhase = scrollProgress > 0.75;
+  const innerBgColor = (!bgStarted || isEndPhase) ? '#252422' : '#EBEBDF';
   const innerBgTransition = bgStarted ? 'background-color 0.8s ease' : 'none';
 
-  // Grid background definitions (separate layers)
   const horizBg = [
     'repeating-linear-gradient(rgba(37,36,34,0.05) 0px, rgba(37,36,34,0.05) 1px, transparent 1px, transparent 40px)',
     'repeating-linear-gradient(rgba(37,36,34,0.1) 0px, rgba(37,36,34,0.1) 2px, transparent 2px, transparent 200px)',
@@ -126,12 +121,10 @@ export default function ScrollHeroSection() {
   const vertAnimName  = gridDir.y === 'top'  ? 'gridSlideFromTop'  : 'gridSlideFromBottom';
   const gridAnimCurve = '0.7s cubic-bezier(0.16, 1, 0.3, 1) both';
 
-  // Navbar: CSS animation on entry, scroll-based after
   const navScrollStyle = navEntryDone
     ? {
-        transform: `translateY(${-fadeP * 60}px)`,
-        opacity: 1 - fadeP,
-        transition: 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+        transform: `translateY(${-slideOutP * 150}px)`,
+        opacity: 1 - slideOutP,
       }
     : {};
 
@@ -166,10 +159,9 @@ export default function ScrollHeroSection() {
             backgroundColor: innerBgColor,
             transition: innerBgTransition,
             opacity: heroOverlayOpacity,
-            pointerEvents: heroOverlayOpacity > 0 ? 'auto' : 'none',
+            pointerEvents: slideOutP >= 1 ? 'none' : 'auto',
           }}
         >
-          {/* Horizontal grid lines — slide from left or right */}
           {showHorizGrid && (
             <div
               className="absolute inset-0 pointer-events-none"
@@ -180,7 +172,6 @@ export default function ScrollHeroSection() {
             />
           )}
 
-          {/* Vertical grid lines — slide from top or bottom */}
           {showVertGrid && (
             <div
               className="absolute inset-0 pointer-events-none"
@@ -191,7 +182,6 @@ export default function ScrollHeroSection() {
             />
           )}
 
-          {/* Cutting mat labels */}
           {showGridLabels && (
             <div className="absolute inset-0 pointer-events-none overflow-hidden opacity-50 anim-nav">
               {Array.from({ length: numLabelsX }).map((_, i) =>
@@ -211,7 +201,6 @@ export default function ScrollHeroSection() {
             </div>
           )}
 
-          {/* Navbar — CSS slide-down on entry, scroll-based after */}
           {showNavbar && (
             <div
               className="absolute top-0 left-0 right-0 pointer-events-auto"
@@ -221,33 +210,37 @@ export default function ScrollHeroSection() {
                 ...navScrollStyle,
               }}
             >
-              <nav className="m-4 sm:m-auto sm:max-w-5xl border-b border-accent mt-20 bg-[#EBEBDF]">
-                <div className="flex items-center justify-between px-6 py-2">
+              <nav
+                className="w-full bg-transparent border-b border-transparent"
+                style={{ paddingTop: '10svh' }}
+              >
+                <div className="flex items-center justify-between px-6 sm:px-16 lg:px-24 xl:px-32 py-3">
                   <div className="flex items-center gap-8">
-                    <span className="text-xl font-bold text-[var(--color-accent)]">ViewPort</span>
+                    <a href="/" className="flex items-center">
+                      <img src="/img/logo.png" alt="ViewPort logo" className="h-8" />
+                    </a>
                     <div className="hidden sm:flex items-center gap-6">
-                      <span className="text-sm text-[var(--color-accent)] font-medium">Home</span>
-                      <a href="/app" className="text-sm text-[var(--color-accent)]/60 hover:text-[var(--color-accent)] transition-colors">App</a>
+                      <span className="text-sm text-[#252422] font-medium">Home</span>
+                      <a href="/app" className="text-sm text-[#252422]/60 hover:text-[#252422] transition-colors">App</a>
                     </div>
                   </div>
-                  <button className="sm:hidden p-2 text-[var(--color-accent)]/60 hover:text-[var(--color-accent)] transition-colors" aria-label="Menu">
-                    <svg width="24" height="24" viewBox="0 0 256 256" fill="currentColor">
-                      <path d="M40,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H160A8,8,0,0,1,40,128ZM40,72H160a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM160,184H40a8,8,0,0,0,0,16H160a8,8,0,0,0,0-16Z" />
-                    </svg>
+                  <button className="sm:hidden p-2 text-[#252422] hover:text-[#252422]/60 transition-colors" aria-label="Menu">
+                     <svg width="22" height="22" viewBox="0 0 22 22" fill="none" strokeWidth="2" strokeLinecap="round">
+                       <line x1="2" y1="7" x2="20" y2="7" stroke="#252422" />
+                       <line x1="2" y1="15" x2="20" y2="15" stroke="#EB1D62" />
+                     </svg>
                   </button>
                 </div>
               </nav>
             </div>
           )}
 
-          {/* Title */}
           {showTitle && (
             <div className="absolute top-[20vh] left-0 right-0 pointer-events-none z-10 px-6 sm:px-16 lg:px-24 xl:px-32">
-              <HeroOverlay scrollProgress={scrollProgress} entryPhase={entryPhase} dotActive={titleAnimDone} />
+              <HeroOverlay slideOutP={slideOutP} entryPhase={entryPhase} dotActive={titleAnimDone} />
             </div>
           )}
 
-          {/* Mockup */}
           <div
             className={`absolute top-[40vh] left-0 right-0 flex justify-center ${entryPhase === 'reveal' ? 'anim-mockup-in' : entryPhase === 'init' ? 'opacity-0' : 'anim-mockup-ready'}`}
             style={{ transition: 'opacity 0.4s' }}
@@ -255,29 +248,53 @@ export default function ScrollHeroSection() {
             <HeroAnimation scrollProgress={scrollProgress} entryPhase={entryPhase} />
           </div>
 
-          {/* CTA */}
           <div
-            className={`absolute bottom-[20vh] left-0 right-0 flex items-center justify-center gap-4 px-6 sm:px-16 lg:px-24 xl:px-32 pb-[max(2.5rem,env(safe-area-inset-bottom,20px))] pointer-events-auto ${!ctaAnimDone && ctaEntered ? 'anim-cta-enter' : ''}`}
+            className={`absolute bottom-[20vh] left-0 right-0 flex items-end justify-between px-6 sm:px-16 lg:px-24 xl:px-32 pb-[max(2.5rem,env(safe-area-inset-bottom,20px))] pointer-events-auto ${!ctaAnimDone && ctaEntered ? 'anim-cta-enter' : ''}`}
             style={{
-              opacity: showCTA ? 1 - fadeP : 0,
-              transform: showCTA ? `translateY(${fadeP * 60}px)` : undefined,
+              opacity: showCTA ? 1 - slideOutP : 0,
+              transform: showCTA ? `translateY(${slideOutP * 150}px)` : undefined,
             }}
           >
-            <a
-              href="/app"
-              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-white bg-[var(--color-accent)] rounded-[3px] hover:bg-accent-hover transition-colors shadow-lg shadow-[var(--color-accent)]/50"
+            <button
+              onClick={() => {
+                const target = document.getElementById('features');
+                if (!target) return;
+                const start = window.scrollY;
+                const end = target.getBoundingClientRect().top + window.scrollY;
+                const duration = 3000;
+                const startTime = performance.now();
+                const ease = (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+                const step = (now: number) => {
+                  const elapsed = now - startTime;
+                  const progress = Math.min(elapsed / duration, 1);
+                  window.scrollTo(0, start + (end - start) * ease(progress));
+                  if (progress < 1) requestAnimationFrame(step);
+                };
+                requestAnimationFrame(step);
+              }}
+              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[#EBEBDF] bg-[#252422] rounded-[3px] hover:bg-[#252422]/80 transition-colors shadow-lg shadow-[#252422]/50"
             >
-              Try It Free
+              Learn more
               <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor">
-                <path d="M224.49,136.49l-72,72a12,12,0,0,1-17-17L187,144H40a12,12,0,0,1,0-24H187L135.51,64.48a12,12,0,0,1,17-17l72,72A12,12,0,0,1,224.49,136.49Z" />
+                <path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z" />
               </svg>
-            </a>
-            <a
-              href="#donate"
-              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[var(--color-text-dim)] border border-[var(--color-border)] rounded-[3px] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] transition-colors"
-            >
-              Support ViewPort ♥
-            </a>
+            </button>
+            <div className="flex flex-col items-center gap-1.5">
+              <span className="text-xs font-semibold tracking-wide text-[#252422]/50 uppercase">Support us</span>
+              <a
+                href="#donate"
+                className="inline-flex items-center justify-center w-[46px] h-[46px] rounded-[3px] bg-[#EB1D62] hover:bg-[#EB1D62]/80 transition-colors shadow-lg shadow-[#EB1D62]/30"
+                aria-label="Support us"
+              >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBEBDF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 8h1a4 4 0 0 1 0 8h-1" />
+                  <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+                  <line x1="6" y1="2" x2="6" y2="5" />
+                  <line x1="10" y1="2" x2="10" y2="5" />
+                  <line x1="14" y1="2" x2="14" y2="5" />
+                </svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>
