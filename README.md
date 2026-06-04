@@ -2,7 +2,7 @@
 
 # ViewPort
 
-![ViewPort Logo](/img/logo.png)
+![ViewPort Logo](public/img/logo.png)
 
 **An open-source and free web toolkit.**
 
