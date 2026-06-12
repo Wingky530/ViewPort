@@ -1,20 +1,20 @@
-# ViewPort — Features List (Current + Planned)
+# ViewPort Features
 
-## ✅ Current Features
+## Current Features
 
 ### Responsive Preview (Tool #1)
 
 -   **Iframe Preview** — Display any URL inside a sandboxed iframe
--   **Local URL Proxy** — Server-side proxy strips `X-Frame-Options` / `CSP` blocking headers, enable localhost preview
+-   **Local URL Proxy** — Server-side proxy strips `X-Frame-Options` and `CSP` blocking headers to enable localhost preview
 -   **Device Presets** — Mobile, tablet, desktop, and TV viewports with realistic bezels
 -   **Custom Dimensions** — Resize the viewport freely with drag handles
--   **Zoom & Rotate** — Scale and flip between portrait/landscape
+-   **Zoom & Rotate** — Scale and flip between portrait and landscape
 -   **URL History** — Recent URLs persisted in local storage
 -   **Search Modal** — Quick URL entry and history browsing
 
 ---
 
-## 🔜 Planned Features
+## Planned Features
 
 ### CSS Inspector (Tool #2)
 
@@ -22,28 +22,28 @@
 -   **Computed Styles** — View all applied CSS properties and their sources
 -   **Box Model Visualization** — See margin, padding, border, and content dimensions
 -   **Layout Debugging** — Inspect Flexbox and Grid layouts with visual guides
--   **Live Editing** — Modify styles on-the-fly and see changes instantly
+-   **Live Editing** — Modify styles on the fly and see changes instantly
 
 ### Color Picker
 
 -   **Element Color Extraction** — Click any element to extract its color
--   **Color Format Support** — View colors in HEX, RGB, HSL formats
+-   **Color Format Support** — View colors in HEX, RGB, and HSL formats
 -   **Palette Generator** — Auto-extract dominant colors from the page
 -   **Copy to Clipboard** — One-click color code copying
 
 ### Performance Monitor
 
--   **Core Web Vitals** — Real-time FCP, LCP, CLS measurements
+-   **Core Web Vitals** — Real-time FCP, LCP, and CLS measurements
 -   **FPS Counter** — Monitor rendering performance
 -   **Network Timeline** — View request waterfall and latency
 -   **Memory Usage** — Track heap size and garbage collection
 
 ### DOM Tree Inspector
 
--   **Interactive DOM Tree** — Expand/collapse element hierarchy
+-   **Interactive DOM Tree** — Expand and collapse the element hierarchy
 -   **Element Selection** — Click elements or navigate the tree to inspect
 -   **Attribute Editing** — View and edit HTML attributes live
--   **Event Listeners** — See attached event handlers and their listeners
+-   **Event Listeners** — See attached event handlers
 -   **Element Search** — Find elements by tag, class, or ID
 
 ### Console Panel
@@ -58,8 +58,6 @@
 -   **Request Timeline** — Visualize all network requests with timing
 -   **Request Details** — View headers, response body, status codes, and size
 -   **Performance Analysis** — Identify slow requests and bottlenecks
--   **Request Details** — View headers, response body, status codes, and size
--   **Performance Analysis** — Identify slow requests and bottlenecks
 -   **Filter & Search** — Find specific requests by type or name
 
 ### Accessibility Audit
@@ -68,7 +66,7 @@
 -   **Contrast Checker** — Verify text contrast ratios
 -   **ARIA Validation** — Detect missing or incorrect ARIA attributes
 -   **Semantic HTML** — Ensure proper use of semantic elements
--   **Audit Report** — Generate detailed accessibility report with fixes
+-   **Audit Report** — Generate a detailed accessibility report with suggested fixes
 
 ### Lighthouse Integration
 
@@ -81,37 +79,24 @@
 
 ---
 
-## 📋 Roadmap Priority
+## Roadmap Priority
 
 **Phase 1 (Next):**
 
--    CSS Inspector
--    Color Picker
+-   CSS Inspector
+-   Color Picker
 
 **Phase 2:**
 
--    DOM Tree Inspector
--    Performance Monitor
+-   DOM Tree Inspector
+-   Performance Monitor
 
 **Phase 3:**
 
--    Console Panel
--    Network Waterfall
+-   Console Panel
+-   Network Waterfall
 
 **Phase 4:**
 
--    Accessibility Audit
--    Lighthouse Integration
-
----
-
-## 💡 Why These Tools?
-
-ViewPort is building a **comprehensive web developer toolkit**. These features complement the Responsive Preview by providing:
-
--   **Design validation** (CSS Inspector, Color Picker)
--   **Performance insights** (Performance Monitor, Network Waterfall, Lighthouse)
--   **Debugging capabilities** (DOM Inspector, Console Panel)
--   **Accessibility compliance** (Accessibility Audit)
-
-All in one place, without switching between tabs or external tools.
+-   Accessibility Audit
+-   Lighthouse Integration

@@ -46,25 +46,6 @@
   --color-ctrl-bg: #E2E2D4;
 }
 
-:root:not(.dark) {
-  --color-bg: #EBEBDF;
-  --color-surface: #F5F5EC;
-  --color-surface-hover: #EEEEE3;
-  --color-text: #252422;
-  --color-text-muted: #666666;
-  --color-text-dim: #5A5957;
-  --color-border: #D6D6C8;
-  --color-danger: #DC2626;
-  --color-success: #16A34A;
-  --color-warning: #D97706;
-  --color-preview-bg: #E2E2D4;
-  --color-frame-bg: #F5F5EC;
-  --color-frame-bezel: #D6D6C8;
-  --color-frame-notch: #B8B8AA;
-  --color-frame-error-bg: #F5F5EC;
-  --color-ctrl-bg: #E2E2D4;
-}
-
 @font-face {
   font-family: 'Viewport';
   src: url('/fonts/viewport.woff2') format('woff2');
