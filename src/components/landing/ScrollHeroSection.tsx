@@ -24,7 +24,7 @@ function HeroOverlay({ slideOutP, entryPhase, dotActive = false }: HeroOverlayPr
         opacity: isRevealed ? 1 - slideOutP : 0,
       }}
     >
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic text-[var(--color-bg)] leading-[1.1] tracking-tight">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold italic text-[#252422] leading-[1.1] tracking-tight">
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '0ms' }}>All-in-one</span>{' '}
         <br />
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '150ms' }}>web</span>{' '}
@@ -32,7 +32,7 @@ function HeroOverlay({ slideOutP, entryPhase, dotActive = false }: HeroOverlayPr
           toolkit<span id="title-dot" className={'inline-block w-[0.20em] h-[0.20em] ml-0.75 mt-[1.7px] transition-colors duration-500 ' + dotActiveClass} />
         </span>
       </h1>
-      <p className={`mt-2.5 text-sm sm:text-base font-semibold italic text-[var(--color-text-muted)] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
+      <p className={`mt-2.5 text-sm sm:text-base font-semibold italic text-[#686864] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
         An open-source and free web toolkit to <ScrambleText />
       </p>
     </div>
@@ -135,8 +135,8 @@ export default function ScrollHeroSection() {
       }
     : {};
 
-  const numLabelsX = 40;
-  const numLabelsY = 12;
+  const numLabelsX = 12;
+  const numLabelsY = 6;
 
   return (
     <>
@@ -230,7 +230,7 @@ export default function ScrollHeroSection() {
                     </a>
                     <div className="hidden sm:flex items-center gap-6">
                       <span className="text-sm text-[#252422] font-medium">Home</span>
-                      <a href="/app" className="text-sm text-[#252422]/60 hover:text-[#252422] transition-colors">App</a>
+                      <a href="/app" className="text-sm text-[#686864] hover:text-[#252422] transition-colors">App</a>
                     </div>
                   </div>
                   <button
@@ -287,7 +287,7 @@ export default function ScrollHeroSection() {
                 };
                 requestAnimationFrame(step);
               }}
-              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-[#EBEBDF] bg-[#252422] rounded-[3px] hover:bg-[#252422]/80 transition-colors shadow-lg shadow-[#252422]/50"
+              className="inline-flex items-center gap-2 px-5 py-3 text-sm font-semibold text-text bg-bg rounded-[3px] hover:brightness-150 transition-all shadow-lg shadow-black/20"
             >
               Learn more
               <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor">
@@ -295,13 +295,13 @@ export default function ScrollHeroSection() {
               </svg>
             </button>
             <div className="flex flex-col items-center gap-1.5">
-              <span className="text-xs font-semibold tracking-wide text-[#252422]/50 uppercase">Support us</span>
+              <span className="text-xs font-semibold tracking-wide text-[#686864] uppercase">Support us</span>
               <a
                 href="#donate"
-                className="inline-flex items-center justify-center w-[46px] h-[46px] rounded-[3px] bg-[#EB1D62] hover:bg-[#EB1D62]/80 transition-colors shadow-lg shadow-[#EB1D62]/30"
+                className="inline-flex items-center justify-center w-[46px] h-[46px] rounded-[3px] bg-accent hover:brightness-110 transition-all shadow-lg shadow-accent/30"
                 aria-label="Support us"
               >
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBEBDF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-white">
                   <path d="M17 8h1a4 4 0 0 1 0 8h-1" />
                   <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
                   <line x1="6" y1="2" x2="6" y2="5" />

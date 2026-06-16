@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react';
 const W_MIN = 200;
 const W_MAX = 520;
 const HO_MAX = 100;
+const MIN_CONTENT_H = 320;
 
 const SIDE_STYLE: Record<string, React.CSSProperties> = {
   top:    { top: 0, left: 0, right: 0, height: 2 },
@@ -128,57 +129,103 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
   let zoomScale = 0.97;
   let zoomRadius = 3;
 
+  const winW = typeof window !== 'undefined' ? window.innerWidth : W_MAX;
+  const winH = typeof window !== 'undefined' ? window.innerHeight : 800;
+  const viewW = winW - 48;
+  const isDesktop = winW >= 1024;
+
+  let startW: number;
+  let endW: number;
+  let startH: number;
+  let endH: number;
+
+  if (isDesktop) {
+    startW = W_MIN;
+    endW = W_MAX;
+    startH = MIN_CONTENT_H;
+    endH = Math.max(endW * (winH / Math.max(1, winW)), MIN_CONTENT_H);
+  } else {
+    startW = Math.min(W_MAX, viewW);
+    endW = W_MIN;
+    startH = MIN_CONTENT_H;
+    endH = MIN_CONTENT_H;
+  }
+  
+  let currentH = startH;
+  let translateY = 0;
+
   if (p < 0.08) {
-    width = W_MIN;
+    width = startW;
+    currentH = startH;
     handOffset = HO_MAX;
     handOpacity = 0;
   } else if (p < 0.18) {
     const pp = phaseP(p, 0.08, 0.18);
     handOffset = HO_MAX * (1 - easeInOutCubic(pp));
     handOpacity = easeInOutCubic(pp);
-    width = W_MIN;
+    width = startW;
+    currentH = startH;
   } else if (p < 0.25) {
     const pp = phaseP(p, 0.18, 0.25);
     handOffset = 0;
     handClosed = pp >= 0.5;
-    width = W_MIN;
+    width = startW;
+    currentH = startH;
   } else if (p < 0.50) {
     const pp = phaseP(p, 0.25, 0.50);
     handOffset = 0;
     handClosed = true;
-    width = W_MIN + (W_MAX - W_MIN) * easeInOutCubic(pp);
+    const ease = easeInOutCubic(pp);
+    width = startW + (endW - startW) * ease;
+    currentH = startH + (endH - startH) * ease;
   } else if (p < 0.55) {
     const pp = phaseP(p, 0.50, 0.55);
     handOffset = 0;
     handClosed = pp < 0.5;
-    width = W_MAX;
+    width = endW;
+    currentH = endH;
   } else if (p < 0.60) {
     const pp = phaseP(p, 0.55, 0.60);
     handOffset = HO_MAX * easeInOutCubic(pp);
-    width = W_MAX;
+    width = endW;
+    currentH = endH;
   } else {
-    const pp = phaseP(p, 0.60, 1.10);
-    width = W_MAX;
-    handOpacity = Math.max(0, 1 - pp * 3);
+    width = endW;
+    currentH = endH;
     handOffset = HO_MAX;
-
-    const viewW = typeof window !== 'undefined'
-      ? window.innerWidth - 48
-      : W_MAX;
-    const isMobile = viewW < W_MAX;
-    const targetScale = isMobile ? 1.15 : viewW / W_MAX;
-    zoomScale = 1 + (targetScale - 1) * easeInOutCubic(pp);
-    zoomRadius = Math.max(0, 3 * (1 - pp));
   }
 
-  const isNarrow = width < 260;
+  const actualBaseWidth = Math.min(endW, Math.max(1, viewW));
+
+  if (p < 0.60) {
+    zoomScale = 0.97;
+  } else {
+    const pp = phaseP(p, 0.60, 1.00);
+    handOpacity = Math.max(0, 1 - pp * 3);
+    
+    const targetScale = winW / actualBaseWidth;
+    
+    const ease = easeInOutCubic(pp);
+    zoomScale = 0.97 + (targetScale - 0.97) * ease;
+    zoomRadius = Math.max(0, 3 * (1 - pp));
+    
+    const centeringH = isDesktop ? endH : MIN_CONTENT_H;
+    const screenTop = 0.30 * winH;
+    const currentCenterY = screenTop + centeringH / 2;
+    const targetCenterY = winH / 2;
+    const maxTranslateY = targetCenterY - currentCenterY;
+    
+    translateY = maxTranslateY * ease;
+  }
+
+  const isNarrow = false;
   const showHand = entryPhase === 'reveal';
   const urlText = initReady && entryPhase !== 'init' ? typedText : '';
 
   const BORDER_RADIUS = `${zoomRadius}px`;
 
   return (
-    <div className="w-full relative overflow-visible" style={{ height: 180 }}>
+    <div className="w-full relative overflow-visible" style={{ height: startH }}>
       <style>{flickerKeyframes.join('\n')}</style>
 
       <div
@@ -186,16 +233,17 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
         style={{
           width: `${width}px`,
           maxWidth: `min(${W_MAX}px, calc(100vw - 48px))`,
-          transform: `scale(${zoomScale})`,
+          transform: `translateY(${translateY}px) scale(${zoomScale})`,
           transformOrigin: 'center center',
         }}
       >
         <div
-          className="bg-[#252422] rounded-[3px] overflow-hidden shadow-lg"
+          className="bg-[#252422] rounded-[3px] overflow-hidden shadow-lg flex flex-col"
           style={{
             borderRadius: BORDER_RADIUS,
             opacity: bodyVisible ? 1 : 0,
             transition: 'opacity 0.3s ease',
+            height: `${currentH}px`
           }}
         >
           <div className={`h-9 bg-[#252422] border-b border-white/10 flex items-center px-4 gap-2 ${!isNarrow ? '' : 'justify-center'}`}>
@@ -206,7 +254,7 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
                 <div className="w-3 h-3 rounded-full bg-success/60" />
               </div>
             )}
-            <div className="h-5 bg-white/8 rounded flex items-center px-2" style={{ width: isNarrow ? '100%' : 'flex-1' }}>
+            <div className={`h-5 bg-white/8 rounded flex items-center px-2 ${isNarrow ? 'w-full' : 'flex-1'}`}>
               <span className="text-[10px] text-white/40 font-mono truncate w-full text-center">
                 {urlText}{entryPhase === 'blink' && initReady && typedText.length < 'viewport'.length ? (
                   <span className="animate-pulse">|</span>
@@ -215,21 +263,19 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
             </div>
           </div>
 
-          <div className={`p-3 ${contentRevealed ? 'anim-content' : 'opacity-0'}`} style={{ minHeight: isNarrow ? 100 : 120 }}>
+          <div className={`p-3 flex-1 flex flex-col ${contentRevealed ? 'anim-content' : 'opacity-0'}`} style={{ minHeight: isNarrow ? 100 : 120 }}>
             <div className="flex gap-4 mb-6">
               <div className="h-3 w-16 rounded bg-white/8" />
               <div className="h-3 w-14 rounded bg-white/8" />
               <div className="h-3 w-12 rounded bg-white/8" />
             </div>
 
-            <div className="flex gap-4" style={{ flexDirection: width < 260 ? 'column' : 'row' }}>
-              {width >= 260 && (
-                <div className="space-y-3 w-1/4 min-w-[60px]">
-                  <div className="h-24 rounded-lg bg-white/8" />
-                  <div className="h-3 w-3/4 rounded bg-white/8" />
-                  <div className="h-3 w-1/2 rounded bg-white/8" />
-                </div>
-              )}
+            <div className="flex gap-4" style={{ flexDirection: 'row' }}>
+              <div className="space-y-3 w-1/4 min-w-[60px]">
+                <div className="h-24 rounded-lg bg-white/8" />
+                <div className="h-3 w-3/4 rounded bg-white/8" />
+                <div className="h-3 w-1/2 rounded bg-white/8" />
+              </div>
               <div className="flex-1 space-y-4">
                 <div className="h-5 w-3/5 rounded bg-white/8" />
                 <div className="h-3 w-full rounded bg-white/8" />
@@ -260,13 +306,13 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
               style={{
                 position: 'absolute',
                 ...SIDE_STYLE[side],
-                background: '#EB1D62',
+                background: 'var(--color-accent)',
                 opacity: activeGlowSides.has(side) && !flickerSides.has(side) ? 1 : 0,
                 transition: 'opacity 0.12s ease',
                 pointerEvents: 'none',
                 borderRadius: sideRadius,
                 animation: flickerSides.has(side) ? `flicker-${idx} 0.35s step-end 1 forwards` : undefined,
-                filter: activeGlowSides.has(side) ? 'drop-shadow(0 0 3px rgba(235,29,98,0.3))' : 'none',
+                filter: activeGlowSides.has(side) ? 'drop-shadow(0 0 3px color-mix(in srgb, var(--color-accent) 30%, transparent))' : 'none',
                 zIndex: 1,
               }}
             />

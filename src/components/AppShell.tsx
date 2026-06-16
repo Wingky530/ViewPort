@@ -270,7 +270,13 @@ export default function AppShell() {
       />
 
       {toast && (
-        <div key={toast.id} className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out">
+        <div
+          key={toast.id}
+          onClick={() => setToast(null)}
+          className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded shadow-lg z-50 animate-fade-in-out cursor-pointer"
+          role="status"
+          aria-live="polite"
+        >
           {toast.message}
         </div>
       )}

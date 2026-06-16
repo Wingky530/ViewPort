@@ -1,0 +1,89 @@
+---
+---
+
+<section id="faq" data-section>
+  <div class="max-w-3xl mx-auto px-6 py-24">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl font-bold text-text">Frequently Asked <span class="text-accent">Questions</span></h2>
+      <p class="mt-4 text-text-muted text-lg">
+        Everything you need to know about ViewPort.
+      </p>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      <details class="group bg-surface border border-border rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-text font-semibold hover:bg-surface-hover group-open:text-accent transition-colors">
+          Is ViewPort completely free?
+          
+          <span class="relative h-5 w-5 shrink-0">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+            </svg>
+          </span>
+        </summary>
+        <div class="px-6 pb-6 text-text-muted leading-relaxed">
+          Yes! ViewPort is 100% free and open-source. There are no paywalls, subscriptions, or hidden limits. You can use it for both personal and commercial projects.
+        </div>
+      </details>
+
+      <details class="group bg-surface border border-border rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-text font-semibold hover:bg-surface-hover group-open:text-accent transition-colors">
+          How does it preview my localhost without a tunnel like Ngrok?
+          
+          <span class="relative h-5 w-5 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+          </span>
+        </summary>
+        <div class="px-6 pb-6 text-text-muted leading-relaxed">
+          ViewPort runs locally on your machine. When you enter a local URL, it uses a built-in proxy to strip blocking headers (like X-Frame-Options and CSP), allowing the iframe to render your local server securely without needing external tunneling.
+        </div>
+      </details>
+
+      <details class="group bg-surface border border-border rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-text font-semibold hover:bg-surface-hover group-open:text-accent transition-colors">
+          Does it work with React, Vite, Next.js, or Astro?
+          
+          <span class="relative h-5 w-5 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+          </span>
+        </summary>
+        <div class="px-6 pb-6 text-text-muted leading-relaxed">
+          Absolutely. ViewPort is entirely framework-agnostic. As long as your framework spins up a local development server (e.g., localhost:3000, 4321, 5173), ViewPort can preview and inspect it flawlessly.
+        </div>
+      </details>
+
+      <details class="group bg-surface border border-border rounded-lg overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+        <summary class="flex cursor-pointer items-center justify-between gap-1.5 p-6 text-text font-semibold hover:bg-surface-hover group-open:text-accent transition-colors">
+          Is my source code or project data secure?
+          
+          <span class="relative h-5 w-5 shrink-0">
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-100 group-open:opacity-0 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" class="absolute inset-0 h-5 w-5 opacity-0 group-open:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" /></svg>
+          </span>
+        </summary>
+        <div class="px-6 pb-6 text-text-muted leading-relaxed">
+          Yes. ViewPort operates directly on your local network. It does not send any of your source code, local assets, or project data to the cloud. The proxy server runs locally, meaning your data stays strictly on your machine.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>

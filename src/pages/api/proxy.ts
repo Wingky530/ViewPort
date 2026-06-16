@@ -82,13 +82,13 @@ export const GET: APIRoute = async ({ url: requestUrl }) => {
     clearTimeout(timeoutId);
     const cause = error.cause?.code || error.code || '';
     if (error.name === 'TimeoutError' || cause === 'UND_ERR_CONNECT_TIMEOUT' || error.message?.includes('aborted')) {
-      return new Response(`Proxy timeout — server di ${url.origin} tidak merespon dalam 30 detik. Pastikan server sedang running.`, { status: 504 });
+      return new Response(`Proxy timed out: the server at ${url.origin} did not respond within 30 seconds. Make sure the server is running.`, { status: 504 });
     }
     if (cause === 'ECONNREFUSED') {
-      return new Response(`Koneksi ditolak — tidak ada server yang berjalan di ${url.origin}`, { status: 502 });
+      return new Response(`Connection refused: no server running at ${url.origin}`, { status: 502 });
     }
     if (cause === 'ECONNRESET') {
-      return new Response(`Koneksi direset — server di ${url.origin} memutus koneksi`, { status: 502 });
+      return new Response(`Connection reset: the server at ${url.origin} closed the connection`, { status: 502 });
     }
     console.error('Proxy error:', error.message);
     return new Response('Proxy error: ' + error.message, { status: 500 });

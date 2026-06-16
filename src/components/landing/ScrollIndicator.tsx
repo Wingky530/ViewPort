@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { CaretLeft } from 'phosphor-react';
 
-const SECTION_IDS = ['hero', 'features', 'how-it-works', 'donate'];
+const SECTION_IDS = ['hero', 'features', 'donate'];
 const PAD_SEC = 6;
 const PAD_TICK = 10;
 const TICK_PCT = 0.005;
@@ -239,7 +239,7 @@ export function ScrollIndicator({ visible }: Props) {
             position: 'relative',
             width: '100%',
             height: '100%',
-            backgroundColor: '#2E2D2C',
+            backgroundColor: 'var(--color-surface)',
             borderRadius: 1,
           }}
         >
@@ -256,9 +256,9 @@ export function ScrollIndicator({ visible }: Props) {
                 width: 10,
                 marginLeft: -5,
                 height: 2,
-                backgroundColor: 'rgba(235,235,223,0.7)',
+                backgroundColor: 'color-mix(in srgb, var(--color-text) 70%, transparent)',
                 borderRadius: 1,
-                boxShadow: '0 0 4px rgba(235,237,223,0.4)',
+                boxShadow: '0 0 4px color-mix(in srgb, var(--color-text) 40%, transparent)',
                 transform: 'translateY(-50%)',
                 cursor: 'pointer',
               }}
@@ -276,7 +276,7 @@ export function ScrollIndicator({ visible }: Props) {
               width: 13,
               marginLeft: -6.5,
               height: 5,
-              backgroundColor: 'rgba(235,29,98,0.3)',
+              backgroundColor: 'color-mix(in srgb, var(--color-accent) 30%, transparent)',
               borderRadius: 1,
               transform: 'translateY(0px)',
               pointerEvents: 'none',
@@ -289,24 +289,32 @@ export function ScrollIndicator({ visible }: Props) {
             ref={indicatorRef}
             style={{
               position: 'absolute',
-              top: 0,
+              top: -19,
               left: '50%',
-              width: 13,
-              marginLeft: -6.5,
-              height: 5,
-              backgroundColor: '#EB1D62',
-              borderRadius: 1,
-              boxShadow: '0 0 6px rgba(235,29,98,0.6)',
+              width: 44,
+              marginLeft: -22,
+              height: 44,
               transform: 'translateY(0px)',
-              willChange: 'transform',
               cursor: 'grab',
               touchAction: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerCancel={onPointerUp}
-          />
+          >
+            <div style={{
+              width: 13,
+              height: 5,
+              backgroundColor: 'var(--color-accent)',
+              borderRadius: 1,
+              boxShadow: '0 0 6px color-mix(in srgb, var(--color-accent) 60%, transparent)',
+              pointerEvents: 'none',
+            }} />
+          </div>
         </div>
       </div>
 
@@ -319,7 +327,7 @@ export function ScrollIndicator({ visible }: Props) {
           transform: visible && manuallyHidden ? 'translateX(0)' : 'translateX(40px)',
           width: 28,
           height: 28,
-          backgroundColor: '#2E2D2C',
+          backgroundColor: 'var(--color-surface)',
           borderRadius: 3,
           display: 'flex',
           alignItems: 'center',
@@ -331,7 +339,7 @@ export function ScrollIndicator({ visible }: Props) {
           transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         }}
       >
-        <CaretLeft size={16} color="#EBEBDF" />
+        <CaretLeft size={16} color="var(--color-text)" />
       </div>
     </>
   );

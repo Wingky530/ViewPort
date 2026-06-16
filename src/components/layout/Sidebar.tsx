@@ -230,7 +230,7 @@ export default function Sidebar({ selectedDevice, onSelectDevice, onCustomMode, 
       step="25"
       value={zoom}
       onChange={(e) => setZoom(parseInt(e.target.value))}
-      className="w-full h-1 bg-gray-200 rounded-lg appearance-none cursor-pointer range-sm dark:bg-gray-700"
+      className="w-full h-1 bg-text-dim/15 rounded-lg appearance-none cursor-pointer range-sm"
     />
   </div>
 
@@ -238,7 +238,7 @@ export default function Sidebar({ selectedDevice, onSelectDevice, onCustomMode, 
     <span className="text-xs font-medium text-text-muted">Scrolling</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" value="" className="sr-only peer" checked={scrolling} onChange={() => setScrolling(prev => !prev)} />
-      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-accent"></div>
+      <div className="w-9 h-5 bg-text-dim/15 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-text-dim/30 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
     </label>
   </div>
 
@@ -246,7 +246,7 @@ export default function Sidebar({ selectedDevice, onSelectDevice, onCustomMode, 
     <span className="text-xs font-medium text-text-muted">Multi-view</span>
     <label className="relative inline-flex items-center cursor-pointer">
       <input type="checkbox" value="" className="sr-only peer" checked={isMultiView} onChange={onToggleMultiView} />
-      <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all dark:border-gray-600 peer-checked:bg-accent"></div>
+      <div className="w-9 h-5 bg-text-dim/15 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-accent rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-text-dim/30 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-accent"></div>
     </label>
   </div>
 </div>
@@ -261,7 +261,7 @@ export default function Sidebar({ selectedDevice, onSelectDevice, onCustomMode, 
   </button>
   <a
     href="#"
-    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-danger rounded-lg hover:bg-red-500 transition-colors"
+    className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-danger rounded-lg hover:brightness-110 transition-colors"
   >
     <Heart size={16} />
     <span>Donate</span>

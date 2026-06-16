@@ -25,15 +25,15 @@ export default function HeroOverlay({ scrollProgress = 0, entryPhase, dotActive 
         opacity: isRevealed ? topOpacity : 0,
       }}
     >
-      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold italic text-[#EB1D62] leading-[1.1] tracking-tight">
+      <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold italic text-accent leading-[1.1] tracking-tight">
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '200ms' }}>All-in-one</span>{' '}
         <br />
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '280ms' }}>web</span>{' '}
         <span className={isRevealed ? 'anim-word' : ''} style={{ animationDelay: '360ms' }}>
-          toolkit<span id="title-dot" className={`inline-block w-[0.15em] h-[0.15em] ml-1 mt-[1.7px] transition-colors duration-500 ${dotActive ? 'bg-[#EB1D62]' : 'bg-accent'}`} />
+          toolkit<span id="title-dot" className={`inline-block w-[0.15em] h-[0.15em] ml-1 mt-[1.7px] transition-colors duration-500 ${dotActive ? 'bg-accent' : 'bg-accent'}`} />
         </span>
       </h1>
-      <p className={`mt-0.5 text-sm sm:text-base font-semibold italic text-[#252422] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
+      <p className={`mt-0.5 text-sm sm:text-base font-semibold italic text-[#686864] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
         An open-source and free web toolkit to <ScrambleText />
       </p>
     </div>

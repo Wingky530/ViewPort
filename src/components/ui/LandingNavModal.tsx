@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X } from '@phosphor-icons/react';
+import { X, House, Browser, Heart } from '@phosphor-icons/react';
 
 type Direction = 'top' | 'bottom' | 'left' | 'right';
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -44,9 +44,9 @@ const panel2Variants = {
 };
 
 const NAV_LINKS = [
-  { label: 'Home', href: '/' },
-  { label: 'App', href: '/app' },
-  { label: 'Support', href: '/#donate' },
+  { label: 'Home', href: '/', icon: House, shortcut: 'Index' },
+  { label: 'Application', href: '/app', icon: Browser, shortcut: '/app' },
+  { label: 'Support', href: '/#donate', icon: Heart, shortcut: '/donate' },
 ];
 
 interface LandingNavModalProps {
@@ -107,7 +107,7 @@ export default function LandingNavModal({ isOpen, onClose }: LandingNavModalProp
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-md"
+            className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
             onClick={onClose}
           />
           <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
@@ -118,33 +118,55 @@ export default function LandingNavModal({ isOpen, onClose }: LandingNavModalProp
               initial="hidden"
               animate="visible"
               exit="exit"
-              className="w-full mx-4 bg-[#EBEBDF] border border-[#D6D6C8] shadow-2xl rounded-lg overflow-hidden pointer-events-auto"
-              style={{ maxWidth: '400px', width: '88%' }}
+              className="w-full mx-4 bg-bg border border-border shadow-2xl rounded-xl overflow-hidden pointer-events-auto"
+              style={{ maxWidth: '360px', width: '90%' }}
             >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-[#D6D6C8]">
-                <span className="text-base font-bold text-[#252422]">Menu</span>
+              <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-surface/50">
+                <span className="text-[11px] font-semibold tracking-widest uppercase text-text-dim">Navigation</span>
                 <button
                   onClick={onClose}
-                  className="p-1.5 text-[#252422]/60 hover:text-[#252422] hover:bg-[#EEEEE3] rounded-lg transition-colors"
+                  className="p-1 text-text-muted hover:text-text hover:bg-surface-hover rounded transition-colors"
                   aria-label="Close menu"
                 >
-                  <X size={20} />
+                  <X size={16} />
                 </button>
               </div>
-              <nav className="p-3 flex flex-col gap-1">
-                {NAV_LINKS.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    onClick={onClose}
-                    className="px-4 py-3 text-sm font-medium text-[#252422] hover:text-[#EB1D62] hover:bg-[#EEEEE3] rounded-lg transition-all"
-                  >
-                    {link.label}
-                  </a>
-                ))}
+              
+              <nav className="p-2 flex flex-col gap-1">
+                {NAV_LINKS.map((link) => {
+                  const Icon = link.icon;
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      onClick={onClose}
+                      className="group flex items-center justify-between px-3 py-3 rounded-lg hover:bg-surface-hover transition-all"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center justify-center w-8 h-8 rounded-md bg-surface border border-border group-hover:border-accent/30 group-hover:bg-accent/5 transition-colors">
+                          <Icon size={16} className="text-text-muted group-hover:text-accent transition-colors" weight="duotone" />
+                        </div>
+                        <span className="text-sm font-medium text-text-muted group-hover:text-text transition-colors">
+                          {link.label}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-text-dim font-mono opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all">
+                        {link.shortcut}
+                      </span>
+                    </a>
+                  );
+                })}
               </nav>
-              <div className="p-3 text-xs text-[#5A5957] text-center border-t border-[#D6D6C8]">
-                Press <kbd className="px-1.5 py-0.5 bg-[#EEEEE3] border border-[#D6D6C8] rounded text-[10px] font-mono">Esc</kbd> to close
+
+              <div className="px-4 py-3 flex items-center justify-between border-t border-border bg-surface/50">
+                <div className="flex items-center gap-2">
+                  <img src="/img/favicon.png" alt="" className="w-4 h-4 rounded-sm grayscale opacity-50" />
+                  <span className="text-xs text-text-dim font-medium">ViewPort</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[10px] text-text-dim uppercase tracking-wider">Close</span>
+                  <kbd className="px-1.5 py-0.5 bg-bg border border-border rounded text-[10px] font-mono text-text-muted shadow-sm">Esc</kbd>
+                </div>
               </div>
             </motion.div>
           </div>

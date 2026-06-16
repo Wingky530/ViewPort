@@ -16,6 +16,7 @@ export default function Navbar({ onToggleSidebar, onToggleSearch, onToggleTools,
           onClick={onToggleSidebar}
           className="lg:hidden p-2 text-text-muted hover:text-text hover:bg-surface-hover rounded-lg transition-colors"
           title="Toggle sidebar"
+          aria-label="Toggle sidebar"
         >
           <List size={20} />
         </button>
@@ -30,6 +31,7 @@ export default function Navbar({ onToggleSidebar, onToggleSearch, onToggleTools,
           onClick={onToggleSearch}
           className={`p-2 rounded-lg transition-colors ${showSearch ? 'text-accent bg-accent/20' : 'text-text-muted hover:text-text hover:bg-surface-hover'}`}
           title="Toggle URL input"
+          aria-label="Toggle URL input"
         >
           <MagnifyingGlass size={18} />
         </button>
@@ -37,6 +39,7 @@ export default function Navbar({ onToggleSidebar, onToggleSearch, onToggleTools,
           onClick={onToggleTools}
           className={`p-2 rounded-lg transition-colors ${showTools ? 'text-accent bg-accent/20' : 'text-text-muted hover:text-text hover:bg-surface-hover'}`}
           title="Toggle tools"
+          aria-label="Toggle tools"
         >
           <SlidersHorizontal size={18} />
         </button>
