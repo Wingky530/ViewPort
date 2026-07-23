@@ -273,8 +273,7 @@ export function ToolSoonSection({ tools }: SectionProps) {
         .soon-stamp {
           font-family: monospace;
           font-size: 11px;
-          color: var(--color-text-dim);
-          opacity: 0.4;
+          color: var(--color-text);
         }
 
         /* ── Card ── */
@@ -812,7 +811,7 @@ export function ToolSoonSection({ tools }: SectionProps) {
         <div className="mx-auto max-w-[800px] mb-8">
           <div className="soon-section-head">
             <span className="soon-stamp">02</span>
-            <span className="text-[10px] font-mono text-text-dim opacity-50">&gt; Coming up</span>
+            <span className="text-[10px] font-mono font-semibold text-text-muted">&gt; Coming up</span>
           </div>
           <h2 className="text-[clamp(1.5rem,3.5vw,2rem)] font-black italic text-text leading-[1.1] tracking-tight mb-2">
             Coming soon<span className="text-accent">.</span>

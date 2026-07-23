@@ -20,7 +20,7 @@ export const tools: Tool[] = [
   {
     name: "Responsive Preview",
     status: "available",
-    href: "/app",
+    href: "/tools/responsive",
     description:
       "Test your layouts across devices in real time. Resize, rotate, and capture any URL.",
     features: [

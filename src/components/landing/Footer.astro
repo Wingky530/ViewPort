@@ -1,122 +1,40 @@
-<footer class="pt-20 pb-10 px-6 border-t mt-auto relative" style="background-color: #EBEBDF; border-color: #D6D6C8;">
+---
+import { execSync } from 'child_process';
+import { readFileSync } from 'node:fs';
+
+const pkg = JSON.parse(readFileSync('./package.json', 'utf-8'));
+let commitHash = 'dev';
+try {
+  commitHash = execSync('git rev-parse --short HEAD', { encoding: 'utf-8' }).toString().trim();
+} catch {}
+---
 <style>
-  footer { color: #252422; }
-  footer .text-text-muted,
-  footer .text-sm.text-text-muted,
-  footer p { color: #666666 !important; }
-  footer .text-text-dim,
-  footer .text-xs.text-text-dim { color: #5A5957 !important; }
-  footer .border-border,
-  footer .border-t,
-  footer .border-b { border-color: #D6D6C8 !important; }
-  footer .bg-border { background-color: #D6D6C8 !important; }
-  footer .hover\:bg-surface-hover:hover { background-color: #E2E2D4 !important; }
-  footer .hover\:border-border:hover { border-color: #D6D6C8 !important; }
-  footer .group:hover .group-hover\:text-text { color: #252422 !important; }
-  footer .group:hover .group-hover\:bg-accent { background-color: #EB1D62 !important; }
-  .dark footer {
-    background-color: #000632 !important;
-    border-color: #1a204a !important;
-    color: #EBEBDF;
-  }
-  .dark footer .text-text-muted,
-  .dark footer .text-sm.text-text-muted,
-  .dark footer p { color: #8b92b5 !important; }
-  .dark footer .text-text-dim,
-  .dark footer .text-xs.text-text-dim { color: #636b95 !important; }
-  .dark footer .border-border,
-  .dark footer .border-t,
-  .dark footer .border-b { border-color: #1a204a !important; }
-  .dark footer .bg-border { background-color: #1a204a !important; }
-  .dark footer .hover\:bg-surface-hover:hover { background-color: rgba(235,235,223,0.05) !important; }
-  .dark footer .group:hover .group-hover\:text-text { color: #EBEBDF !important; }
+  footer#viewport-footer { background-color: #EBEBDF !important; border-color: #D6D6C8 !important; color: #252422; }
+  footer#viewport-footer a, footer#viewport-footer p, footer#viewport-footer span { color: #5A5957; }
+  footer#viewport-footer a:hover { color: #EB1D62; }
+  footer#viewport-footer .sep { color: #D6D6C8; }
+  footer#viewport-footer .bold { color: #252422; font-weight: 600; }
 </style>
-  <div class="max-w-6xl mx-auto">
-    
-    <!-- Community Call to Action (TOP) -->
-    <div class="mb-16 pb-16 border-b border-border flex flex-col items-center justify-center text-center gap-6">
-      <div class="flex flex-col gap-2">
-        <h3 class="text-xl font-bold text-text">Proudly Open Source</h3>
-        <p class="text-text-muted">Built by developers, for developers. Help us grow by starring the project!</p>
-      </div>
-      <a 
-        href="https://github.com/Wingky530/viewport" 
-        target="_blank" 
-        rel="noopener noreferrer"
-        class="group flex items-center gap-3 px-6 py-3 rounded-lg bg-[#252422] border border-[#3A3937] transition-all active:scale-[0.98] shadow-sm hover:shadow active:shadow hover:!border-[#181717] active:!border-[#181717] hover:!bg-[#181717] active:!bg-[#181717]"
-      >
-        <svg class="w-5 h-5 text-[#EBEBDF] group-hover:!text-white group-active:!text-white transition-colors" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
-        </svg>
-        <span class="text-sm font-semibold text-[#EBEBDF] group-hover:!text-white group-active:!text-white transition-colors">Star on GitHub</span>
-        <span id="github-stars" class="text-sm font-mono text-[#EBEBDF]/80 border-l border-[#3A3937] group-hover:!border-white/30 group-active:!border-white/30 pl-3 ml-1 flex items-center gap-1 transition-colors group-hover:!text-white group-active:!text-white">
-          <span class="opacity-80 transition-colors">&#9733;</span> <span class="opacity-0 w-4 inline-block">&mdash;</span>
-        </span>
-      </a>
+<footer id="viewport-footer" class="py-16 px-6 border-t mt-auto relative">
+  <div class="max-w-2xl mx-auto flex flex-col items-center text-center gap-5">
+    <a href="/" class="flex items-center">
+      <img src="/img/logo.png" alt="ViewPort" class="h-7 opacity-90 hover:opacity-100 transition-opacity" />
+    </a>
+    <p class="text-sm leading-relaxed" style="max-width: 280px;">
+      An open-source web toolkit for developers.
+    </p>
+    <div class="flex items-center gap-3 text-xs">
+      <span class="sep">/</span>
+      <a href="https://github.com/Wingky530/viewport" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <span class="sep">/</span>
     </div>
-
-    <!-- Links Grid -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-10 md:gap-16 lg:gap-24 w-full mb-20 justify-items-center sm:justify-items-start">
-      
-      <!-- Column 1 Product -->
-      <div class="flex flex-col gap-6 justify-self-start sm:justify-self-center">
-        <span class="text-[10px] text-text-dim uppercase tracking-widest font-medium">Product</span>
-        <ul class="flex flex-col gap-3.5">
-          <li><a href="#" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Home</a></li>
-          <li><a href="/app" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">App</a></li>
-          <li><a href="/changelog" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Changelog</a></li>
-        </ul>
-      </div>
-      
-      <!-- Column 2 Resources -->
-      <div class="flex flex-col gap-6 justify-self-end sm:justify-self-center">
-        <span class="text-[10px] text-text-dim uppercase tracking-widest font-medium">Resources</span>
-        <ul class="flex flex-col gap-3.5">
-          <li><a href="/docs" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Documentation</a></li>
-          <li><a href="https://github.com/Wingky530/viewport/issues" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Issues</a></li>
-          <li><a href="https://github.com/Wingky530/viewport/discussions" target="_blank" rel="noopener noreferrer" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Discussions</a></li>
-        </ul>
-      </div>
-      
-      <!-- Column 3 Legal (CENTERED) -->
-      <div class="flex flex-col items-center gap-6 col-span-2 sm:col-span-1 justify-self-center sm:justify-self-center mt-6 sm:mt-0">
-        <span class="text-[10px] text-text-dim uppercase tracking-widest font-medium">Legal</span>
-        <ul class="flex flex-row flex-wrap justify-center sm:flex-col sm:items-center gap-x-6 gap-y-3 sm:gap-3.5">
-          <li><a href="/privacy" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Privacy</a></li>
-          <li><a href="/terms" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">Terms</a></li>
-          <li><a href="/license" class="group flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors">License</a></li>
-        </ul>
-      </div>
+    <div class="flex flex-col items-center gap-1 pt-4">
+      <p class="text-xs leading-relaxed">
+        Built with <span class="bold">Astro</span>, <span class="bold">React</span>, <span class="bold">TypeScript</span>, and <span class="bold">Tailwind CSS</span>
+      </p>
+      <span class="text-[10px] font-mono">
+        v{pkg.version} &middot; {commitHash}
+      </span>
     </div>
-
-    <!-- Bottom Section: Brand & Copyright -->
-    <div class="pt-10 border-t border-border flex flex-col items-center justify-center text-center gap-5">
-      <div class="flex flex-col items-center gap-4 max-w-sm">
-        <a href="/" class="group flex items-center w-fit">
-          <img src="/img/logo.png" alt="ViewPort" class="h-7 w-auto opacity-90 group-hover:opacity-100 transition-opacity" />
-        </a>
-        <p class="text-sm text-text-muted leading-relaxed">
-          An open-source web toolkit for developers. Built for precision, speed, and reliability.
-        </p>
-      </div>
-      
-      <span class="text-xs text-text-dim font-mono mt-2">&copy; 2026 ViewPort.</span>
-    </div>
-
   </div>
 </footer>
-
-<script>
-(function() {
-  var el = document.getElementById("github-stars");
-  if (!el) return;
-  fetch("https://api.github.com/repos/Wingky530/viewport").then(function(r) {
-    if (!r.ok) throw new Error();
-    return r.json();
-  }).then(function(data) {
-    el.innerHTML = '<span class="opacity-80 transition-colors">&#9733;</span> <span class="font-mono transition-colors">' + data.stargazers_count + '</span>';
-  }).catch(function() {
-    el.innerHTML = '<span class="opacity-80 transition-colors">&#9733;</span> <span class="font-mono transition-colors">&mdash;</span>';
-  });
-})();
-</script>

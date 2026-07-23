@@ -260,8 +260,7 @@ export default function ResponsivePreviewer({ tool }: Props) {
         .rp-stamp {
           font-family: monospace;
           font-size: 11px;
-          color: var(--color-text-dim);
-          opacity: 0.4;
+          color: var(--color-text);
         }
 
         /* -- shared frame -- */
@@ -667,10 +666,10 @@ export default function ResponsivePreviewer({ tool }: Props) {
         <div className="mx-auto max-w-[800px] mb-8">
           <div className="rp-section-head">
             <span className="rp-stamp">01</span>
-            <span className="text-[10px] font-mono text-text-dim opacity-50">&gt; Available now</span>
+            <span className="text-[10px] font-mono font-semibold text-accent">&gt; Available now</span>
           </div>
           <a
-            href={tool.href ?? "/app"}
+            href={tool.href ?? "/tools/responsive"}
             className="group inline-flex items-center gap-3 no-underline mb-2"
           >
             <h2 className="text-[clamp(1.5rem,3.5vw,2rem)] font-black italic text-text leading-[1.1] tracking-tight group-hover:text-accent transition-colors duration-200">

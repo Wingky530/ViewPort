@@ -45,7 +45,7 @@ npm install -g pnpm
 
 ## Usage
 
-Start the development server and open `localhost:1234` (or `localhost:1234/app`):
+Start the development server and open `localhost:1234` (or `localhost:1234/tools/responsive`):
 
 ```sh
 pnpm dev

@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import HeroAnimation from './HeroAnimation.tsx';
 import ScrambleText from './ScrambleText.tsx';
 import { ScrollIndicator } from './ScrollIndicator.tsx';
-import LandingNavModal from '../ui/LandingNavModal.tsx';
 
 type EntryPhase = 'init' | 'blink' | 'reveal';
 
@@ -33,7 +32,7 @@ function HeroOverlay({ slideOutP, entryPhase, dotActive = false }: HeroOverlayPr
         </span>
       </h1>
       <p className={`mt-2.5 text-sm sm:text-base font-semibold italic text-[#686864] leading-relaxed ${isRevealed ? 'anim-desc' : ''}`}>
-        An open-source and free web toolkit to <ScrambleText />
+        An open-source and free web toolkit to<br /><ScrambleText />
       </p>
     </div>
   );
@@ -65,7 +64,6 @@ export default function ScrollHeroSection() {
   const [showTitle, setShowTitle] = useState(false);
   const [showCTA, setShowCTA] = useState(false);
   const [contentRevealed, setContentRevealed] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     window.history.scrollRestoration = 'manual';
@@ -223,32 +221,14 @@ export default function ScrollHeroSection() {
                 className="w-full bg-transparent border-b border-transparent"
                 style={{ paddingTop: '10svh' }}
               >
-                <div className="flex items-center justify-between px-6 sm:px-16 lg:px-24 xl:px-32 py-3">
-                  <div className="flex items-center gap-8">
-                    <a href="/" className="flex items-center">
-                      <img src="/img/logo.png" alt="ViewPort logo" className="h-8" />
-                    </a>
-                    <div className="hidden sm:flex items-center gap-6">
-                      <span className="text-sm text-[#252422] font-medium">Home</span>
-                      <a href="/app" className="text-sm text-[#686864] hover:text-[#252422] transition-colors">App</a>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setMobileMenuOpen(o => !o)}
-                    className="sm:hidden relative p-2 text-[#252422] transition-colors z-50"
-                    aria-label="Menu"
-                  >
-                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" strokeWidth="2" strokeLinecap="round" style={{ overflow: 'visible' }}>
-                      <line x1="3" y1="7" x2="19" y2="7" stroke="#252422" style={{ transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1)', transform: mobileMenuOpen ? 'translateY(4px) rotate(45deg)' : 'translateY(0) rotate(0)', transformOrigin: 'center' }} />
-                      <line x1="3" y1="15" x2="19" y2="15" stroke="#EB1D62" style={{ transition: 'transform 0.3s cubic-bezier(0.16,1,0.3,1)', transform: mobileMenuOpen ? 'translateY(-4px) rotate(-45deg)' : 'translateY(0) rotate(0)', transformOrigin: 'center' }} />
-                    </svg>
-                  </button>
+                <div className="flex items-center px-6 sm:px-16 lg:px-24 xl:px-32 py-3">
+                  <a href="/" className="flex items-center">
+                    <img src="/img/logo.png" alt="ViewPort logo" className="h-8" />
+                  </a>
                 </div>
               </nav>
             </div>
           )}
-
-          <LandingNavModal isOpen={mobileMenuOpen} onClose={() => setMobileMenuOpen(false)} />
 
           {showTitle && (
             <div className="absolute top-[20vh] left-0 right-0 pointer-events-none z-10 px-6 sm:px-16 lg:px-24 xl:px-32">

@@ -16,6 +16,32 @@ function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 
+function easeOutBack(t: number): number {
+  const c1 = 1.70158;
+  const c3 = c1 + 1;
+  return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2);
+}
+
+function phaseP(p: number, start: number, end: number): number {
+  return Math.max(0, Math.min(1, (p - start) / (end - start)));
+}
+
+function entry(t: number, s: number, e: number): number {
+  if (t < s) return 0;
+  if (t < e) return easeInOutCubic(phaseP(t, s, e));
+  return 1;
+}
+
+function exit(t: number, s: number, e: number): number {
+  if (t < s) return 1;
+  if (t < e) return 1 - easeInOutCubic(phaseP(t, s, e));
+  return 0;
+}
+
+function elementPhase(t: number, es: number, ee: number, xs: number, xe: number): number {
+  return entry(t, es, ee) * exit(t, xs, xe);
+}
+
 function HandOpen() {
   return (
     <svg width="22" height="22" viewBox="0 0 256 256" fill="#FFFFFF">
@@ -116,10 +142,6 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
     }
   }, [entryPhase, initReady]);
 
-  function phaseP(p: number, start: number, end: number): number {
-    return Math.max(0, Math.min(1, (p - start) / (end - start)));
-  }
-
   const p = scrollProgress;
 
   let width = W_MIN;
@@ -175,7 +197,7 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
     const pp = phaseP(p, 0.25, 0.50);
     handOffset = 0;
     handClosed = true;
-    const ease = easeInOutCubic(pp);
+    const ease = easeOutBack(pp);
     width = startW + (endW - startW) * ease;
     currentH = startH + (endH - startH) * ease;
   } else if (p < 0.55) {
@@ -222,6 +244,17 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
   const showHand = entryPhase === 'reveal';
   const urlText = initReady && entryPhase !== 'init' ? typedText : '';
 
+  const headingExit = exit(p, 0.60, 0.68);
+  const barExit    = exit(p, 0.60, 0.68);
+  const gridExit   = exit(p, 0.63, 0.73);
+  const sidebarExit= exit(p, 0.68, 0.78);
+  const chromeExit = exit(p, 0.72, 0.80);
+  const urlExit    = exit(p, 0.78, 0.88);
+  const headingEntry = entry(p, 0.25, 0.33);
+  const barEntry    = entry(p, 0.29, 0.39);
+  const gridEntry   = entry(p, 0.34, 0.44);
+  const sidebarEntry= entry(p, 0.38, 0.48);
+
   const BORDER_RADIUS = `${zoomRadius}px`;
 
   return (
@@ -246,16 +279,14 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
             height: `${currentH}px`
           }}
         >
-          <div className={`h-9 bg-[#252422] border-b border-white/10 flex items-center px-4 gap-2 ${!isNarrow ? '' : 'justify-center'}`}>
-            {!isNarrow && (
-              <div className="flex gap-1.5">
-                <div className="w-3 h-3 rounded-full bg-danger/60" />
-                <div className="w-3 h-3 rounded-full bg-warning/60" />
-                <div className="w-3 h-3 rounded-full bg-success/60" />
-              </div>
-            )}
-            <div className={`h-5 bg-white/8 rounded flex items-center px-2 ${isNarrow ? 'w-full' : 'flex-1'}`}>
-              <span className="text-[10px] text-white/40 font-mono truncate w-full text-center">
+          <div className="h-9 bg-[#252422] border-b border-white/10 flex items-center px-4 gap-2">
+            <div className="flex items-center gap-[3px]" style={{ opacity: chromeExit }}>
+              <span className="w-2.5 h-[1.5px] rounded-full bg-white/15" />
+              <span className="w-2.5 h-[1.5px] rounded-full bg-white/15" />
+              <span className="w-2.5 h-[1.5px] rounded-full bg-white/15" />
+            </div>
+            <div className="flex-1 h-5 bg-white/8 rounded flex items-center px-2" style={{ opacity: chromeExit }}>
+              <span className="text-[10px] text-white/40 font-mono truncate w-full text-center" style={{ opacity: urlText ? urlExit : 1 }}>
                 {urlText}{entryPhase === 'blink' && initReady && typedText.length < 'viewport'.length ? (
                   <span className="animate-pulse">|</span>
                 ) : ''}
@@ -263,30 +294,28 @@ export default function HeroAnimation({ scrollProgress, entryPhase, contentRevea
             </div>
           </div>
 
-          <div className={`p-3 flex-1 flex flex-col ${contentRevealed ? 'anim-content' : 'opacity-0'}`} style={{ minHeight: isNarrow ? 100 : 120 }}>
+          <div className="p-3 flex-1 flex flex-col" style={{ opacity: contentRevealed ? 1 : 0, transition: 'opacity 0.4s ease', minHeight: 120 }}>
             <div className="flex gap-4 mb-6">
-              <div className="h-3 w-16 rounded bg-white/8" />
-              <div className="h-3 w-14 rounded bg-white/8" />
-              <div className="h-3 w-12 rounded bg-white/8" />
+              <div className="h-3 w-16 rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
+              <div className="h-3 w-14 rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
+              <div className="h-3 w-12 rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
             </div>
 
             <div className="flex gap-4" style={{ flexDirection: 'row' }}>
-              <div className="space-y-3 w-1/4 min-w-[60px]">
+              <div className="space-y-3 w-1/4 min-w-[60px]" style={{ opacity: sidebarExit, transform: `translateY(${(1 - sidebarEntry) * 8}px) scale(${1 - 0.05 * (1 - sidebarExit)})` }}>
                 <div className="h-24 rounded-lg bg-white/8" />
                 <div className="h-3 w-3/4 rounded bg-white/8" />
                 <div className="h-3 w-1/2 rounded bg-white/8" />
               </div>
               <div className="flex-1 space-y-4">
-                <div className="h-5 w-3/5 rounded bg-white/8" />
-                <div className="h-3 w-full rounded bg-white/8" />
-                <div className="h-3 w-11/12 rounded bg-white/8" />
-                <div className="h-3 w-4/5 rounded bg-white/8" />
-                <div className={`grid gap-3 mt-6 ${isNarrow ? 'grid-cols-2' : 'grid-cols-3'}`}>
-                  <div className="h-20 rounded-lg bg-white/8" />
-                  <div className="h-20 rounded-lg bg-white/8" />
-                  {!isNarrow && (
-                    <div className="h-20 rounded-lg bg-white/8" />
-                  )}
+                <div className="h-5 w-3/5 rounded bg-white/8" style={{ opacity: headingExit, transform: `translateY(${(1 - headingEntry) * 6}px) scale(${1 - 0.05 * (1 - headingExit)})`}} />
+                <div className="h-3 w-full rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
+                <div className="h-3 w-11/12 rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
+                <div className="h-3 w-4/5 rounded bg-white/8" style={{ opacity: barExit, transform: `translateY(${(1 - barEntry) * 6}px) scale(${1 - 0.05 * (1 - barExit)})`}} />
+                <div className="grid gap-3 mt-6 grid-cols-3">
+                  <div className="h-20 rounded-lg bg-white/8" style={{ opacity: gridExit, transform: `scale(${1 - 0.08 * (1 - gridEntry * gridExit)})`}} />
+                  <div className="h-20 rounded-lg bg-white/8" style={{ opacity: gridExit, transform: `scale(${1 - 0.08 * (1 - gridEntry * gridExit)})`}} />
+                  <div className="h-20 rounded-lg bg-white/8" style={{ opacity: gridExit, transform: `scale(${1 - 0.08 * (1 - gridEntry * gridExit)})`}} />
                 </div>
               </div>
             </div>

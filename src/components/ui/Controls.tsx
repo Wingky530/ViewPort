@@ -25,7 +25,7 @@ export default function Controls({
   const [copied, setCopied] = useState(false);
 
   const shareUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}/app?url=${encodeURIComponent(url)}&device=${encodeURIComponent(device.name)}&w=${device.width}&h=${device.height}`
+    ? `${window.location.origin}/tools/responsive?url=${encodeURIComponent(url)}&device=${encodeURIComponent(device.name)}&w=${device.width}&h=${device.height}`
     : '';
 
   const handleCopy = async () => {

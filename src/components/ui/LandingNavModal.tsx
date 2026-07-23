@@ -45,7 +45,7 @@ const panel2Variants = {
 
 const NAV_LINKS = [
   { label: 'Home', href: '/', icon: House, shortcut: 'Index' },
-  { label: 'Application', href: '/app', icon: Browser, shortcut: '/app' },
+  { label: 'Application', href: '/tools/responsive', icon: Browser, shortcut: '/tools/responsive' },
   { label: 'Support', href: '/#donate', icon: Heart, shortcut: '/donate' },
 ];
 
